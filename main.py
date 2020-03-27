@@ -15,6 +15,8 @@ class InstaComment ():
         sleep(5)
         self.web_driver.find_element_by_name("username").send_keys(username)
         self.web_driver.find_element_by_name("password").send_keys(pw)
+        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div")\
+            .click()
         
 
 
