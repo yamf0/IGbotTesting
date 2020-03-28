@@ -3,6 +3,7 @@ import os
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common import keys
+from selenium.webdriver.remote.command import Command
 import random
 
 #Find PATH to current Directory (to find the dirver)
@@ -28,22 +29,42 @@ class InstaComment ():
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
         sleep(3)
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
+        for i in range (10):
+            self.iterate()
+        self.web_driver.quit()
 
+    def iterate(self):
+        ##Checks for the Hashtag entry
         used_hs = self.hashtag()  
         used_comment = self.comment(used_hs)
-
+        ##Search the Hashtag
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(used_hs)
-        sleep(1)
+        sleep(3)
+
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]/div").click()
-        sleep(3)
+        sleep(4)
+        
+        #click the image
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[1]/div/div/div[1]/div[1]/a/div/div[2]").click()
-        sleep(3)
+        sleep(5)
+        
+        ##Search previous Like
+        if (self.has_like()):
+            self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+            sleep(5)
+            return 
+        #Click Like
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button").click()
-        sleep(1)
+        sleep(2)
+        
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[2]/button").click()
-        self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(used_comment)
-        #self.web_driver.find_element_by_tag_name("textarea").send_keys(used_comment)
-        self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
+        #self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(used_comment)
+        #self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
+        sleep(2)
+        ##This is the close Button
+        self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+        sleep(5)
+        
 
     def hashtag(self):
         """
@@ -60,5 +81,19 @@ class InstaComment ():
         num = random.randint(0,len(comment)-1)
         comment = comment[num]
         return comment
+    def has_like (self):
+        fill = self.web_driver.find_element_by_xpath("//*[local-name()='span' and @class='fr66n']/*[local-name()='button']/*[local-name()='svg']").get_attribute("fill")
+        print(fill)
+        if fill == "#ed4956":
+            return True
+        else:
+            return False
+      
 
-Bot = InstaComment('mexicansombreroless','mannheimzittau')
+def main ():
+    
+    Bot = InstaComment('mexicansombreroless','mannheimzittau')
+    
+
+if __name__ == "__main__":
+    main()
