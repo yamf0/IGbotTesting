@@ -30,9 +30,7 @@ class InstaComment ():
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
 
         used_hs = self.hashtag()  
-        print(used_hs)
         used_comment = self.comment(used_hs)
-        print(used_comment)
 
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(used_hs)
         sleep(1)
@@ -40,7 +38,9 @@ class InstaComment ():
         sleep(3)
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[1]/div/div/div[1]/div[1]/a/div/div[2]").click()
         sleep(3)
-        #self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(comment)
+        self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button").click()
+        sleep(1)
+        self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(used_comment)
         #self.web_driver.find_element_by_tag_name("textarea").send_keys(used_comment)
         #self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
 
@@ -48,7 +48,7 @@ class InstaComment ():
         """
             Will choose randomly a Hashtag and rerturn its value
         """
-        choose = random.randint(0,len(poss))
+        choose = random.randint(0,len(poss)-1)
         return poss[choose]
     
     def comment (self,hs):
@@ -56,7 +56,7 @@ class InstaComment ():
             Will choose a comment depending on the hashtag that was opened
         """
         comment = comm[hs]
-        num = random.randint(0,len(comment))
+        num = random.randint(0,len(comment)-1)
         comment = comment[num]
         return comment
 
