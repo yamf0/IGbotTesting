@@ -14,7 +14,7 @@ import random
 path_driver = os.path.dirname(os.path.realpath(__file__))
 print (path_driver)
 
-poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel"]
+poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling"]
 comm = {
     "#stayandwander" : ["what an amazing pic!", "Perfection", "We loved it"],
     "#europe_perfection": ["This is amazing", "Congrats for the great photo", "What a Pic!!!"],
@@ -43,45 +43,54 @@ class InstaComment ():
             Will iterate through the hastags 
         """
         ##Checks for the Hashtag entry
-        used_hs = self.hashtag()  
-        used_comment = self.comment(used_hs)
+        self.used_hs = self.hashtag()  
+
         ##Search the Hashtag
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(used_hs)
+        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(self.used_hs)
         sleep(3)
 
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]/div").click()
+        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]").click()
+        
         sleep(3)
         
-        self.iterate_photos()
+        self.iterate_photos("top")
+        self.iterate_photos("recent")
         
-    def iterate_photos(self):
+    def iterate_photos(self, section):
         """
             Will do the iteration through the photos 
         """
-        #Iterate through photos
-        path_init = "/html/body/div[1]/section/main/article/div[1]/div/div/"
+        #Check if section is over
+        if section == "top" :
+            path_init = "/html/body/div[1]/section/main/article/div[1]/div/div/"    
+        else:
+            path_init = "/html/body/div[1]/section/main/article/div[2]/div/"    
         path_end = "/a/div/div[2]"
         for i in range(1,4):
             path_i = "div["+ str(i) + "]"
             for j in range(1,4):
                 path_j = "/div[" + str(j) + "]"
+
+                #Generate the Comment for that point
+                self.used_comment = self.comment(self.used_hs)
                 #click the image
                 real_path=path_init+path_i+path_j+path_end
                 self.web_driver.find_element_by_xpath(real_path).click()
-                sleep(3)
+                sleep(5)
 
                 ##Search previous Like
                 if (self.has_like()):
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                     sleep(1)
-                    return
+                    continue
                 
                 #Click Like
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button").click()
                 sleep(2)
         
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[2]/button").click()
-                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(used_comment)
+                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.used_comment)
+                sleep(2)
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
                 sleep(2)
                 
