@@ -34,27 +34,25 @@ class InstaComment ():
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
         sleep(3)
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
+
         for i in range (10):
-            self.iterate_hastag()
+            self.iterate_hastag(self.hashtag())
         self.web_driver.quit()
 
-    def iterate_hastag(self):
+    def iterate_hastag(self,hashtag_global):
         """
             Will iterate through the hastags 
         """
-        ##Checks for the Hashtag entry
-        used_hs = self.hashtag()  
-        used_comment = self.comment(used_hs)
         ##Search the Hashtag
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(used_hs)
+        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtag_global)
         sleep(3)
 
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]/div").click()
         sleep(3)
         
-        self.iterate_photos()
+        self.iterate_photos(hashtag_global)
         
-    def iterate_photos(self):
+    def iterate_photos(self,hashtag_global_photos):
         """
             Will do the iteration through the photos 
         """
@@ -81,7 +79,7 @@ class InstaComment ():
                 sleep(2)
         
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[2]/button").click()
-                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(used_comment)
+                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.comment(hashtag_global_photos))
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
                 sleep(2)
                 
