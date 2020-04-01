@@ -53,7 +53,7 @@ class InstaComment ():
         """
             Will iterate through the hastags 
         """
-
+        self.com_count = 10
         ##Search the Hashtag
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtag_global)
 
@@ -97,11 +97,13 @@ class InstaComment ():
                 #Click Like
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button").click()
                 sleep(2)
-        
-                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[2]/button").click()
-                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.used_comment)
-                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
-                sleep(3)
+                
+                if (random.choice([True,False])):
+                    self.com_count = com_count - 1
+                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[2]/button").click()
+                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.used_comment)
+                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
+                    sleep(3)
                 
                 ##This is the close Button
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
