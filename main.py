@@ -9,6 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.common import keys
 from selenium.webdriver.remote.command import Command
 import random
+import math
 
 #Find PATH to current Directory (to find the driver)
 path_driver = os.path.dirname(os.path.realpath(__file__))
@@ -18,7 +19,7 @@ print (path_driver)
 poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
 "#wanderlusting", "#wanderluster", "#europetravel", "#architecture","#sunset","#traveltheworld"]
 comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great Photos", "This place is amazing",\
-    "This is amazing", "Congrats for the great photo", "What a Pic!!!", "That great!",\
+    "This is amazing", "Congrats for the great photo", "What a Pic!!!", "That is great!",\
     "Wow that pic!", "This place is amazing", "Keep up the great photos", "Amazing",\
     "Perfect!", "Amazing", "That is nice!", "Great",\
     "What a destination", "That is amazing", "Great!!!",\
@@ -40,7 +41,7 @@ class InstaComment ():
         self.web_driver.find_element_by_name("username").send_keys(username)
         sleep(1)
         self.web_driver.find_element_by_name("password").send_keys(pw)
-        sleep (2)
+        sleep (3)
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
         sleep(3)
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
@@ -97,13 +98,17 @@ class InstaComment ():
                 #Click Like
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button").click()
                 sleep(2)
-                
-                if (random.choice([True,False])):
-                    self.com_count = com_count - 1
+                choice = random.choices([True,False],[((math.e)**((self.com_count/10)-1)),((math.e)**(-self.com_count/10))],k=1)
+                print (choice[0])
+                print(self.com_count)
+                if (choice[0]):
+                    self.com_count = self.com_count - 1
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[2]/button").click()
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.used_comment)
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
                     sleep(3)
+                    if (self.com_count==0):
+                        return
                 
                 ##This is the close Button
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
