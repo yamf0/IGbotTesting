@@ -14,14 +14,15 @@ import random
 path_driver = os.path.dirname(os.path.realpath(__file__))
 print (path_driver)
 
-poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel"]
+poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel","#travelphotography","#travelling","#sunset"]
 comm = {
     "#stayandwander" : ["what an amazing pic!", "Perfection", "We loved it"],
     "#europe_perfection": ["This is amazing", "Congrats for the great photo", "What a Pic!!!"],
     "#landscape": ["Wow that pic!", "This place is amazing", "Keep up the great photos"],
     "#travel": ["Perfect!", "Amazing", "That is nice!"],
     "#travelphotography": ["What a destination", "That is amazing", "Great!!!"],
-    "#travelling":["Wish to be there","Cannot wait to be there","Maybe this is the sombrero next destination"]
+    "#travelling":["Wish to be there","Cannot wait to be there","Maybe this is the sombrero next destination","Nice photo"]
+    "#sunset":["Really love this part of the day"]
 }
 
 class InstaComment ():
