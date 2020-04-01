@@ -14,20 +14,23 @@ import random
 path_driver = os.path.dirname(os.path.realpath(__file__))
 print (path_driver)
 
-<<<<<<< HEAD
-poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel","#travelphotography","#travelling","#sunset"]
-=======
-poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling"]
->>>>>>> 8751377e57a215e9a1b3f278561540575f0aa286
-comm = {
-    "#stayandwander" : ["what an amazing pic!", "Perfection", "We loved it"],
-    "#europe_perfection": ["This is amazing", "Congrats for the great photo", "What a Pic!!!"],
-    "#landscape": ["Wow that pic!", "This place is amazing", "Keep up the great photos"],
-    "#travel": ["Perfect!", "Amazing", "That is nice!"],
-    "#travelphotography": ["What a destination", "That is amazing", "Great!!!"],
-    "#travelling":["Wish to be there","Cannot wait to be there","Maybe this is the sombrero next destination","Nice photo"]
-    "#sunset":["Really love this part of the day"]
-}
+
+poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
+"#wanderlusting", "#wanderluster", "#europetravel", "#architecture","#sunset","#traveltheworld"]
+comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great Photos", "This place is amazing",\
+    "This is amazing", "Congrats for the great photo", "What a Pic!!!", "That great!",\
+    "Wow that pic!", "This place is amazing", "Keep up the great photos", "Amazing",\
+    "Perfect!", "Amazing", "That is nice!", "Great",\
+    "What a destination", "That is amazing", "Great!!!",\
+    "Wish to be there","Cannot wait to be there","Maybe this is the sombrero next destination","Nice photo",\
+    "Really love this part of the day",\
+    "Wish to be there","Cannot wait to be there","Maybe this is the sombrero next destination",\
+    "WOW", "This is Perfect", "Congrats for the great Photo", "Simply Beautiful",\
+    "Amazing pic!!", "Congrats, this is Great!", "That seems amazing!", "Great Pic",\
+    "Pff that is amazing", "Keep up the great Photos", "We loved it", "That is incredible",\
+    "Great Photo!", "We loved it!",\
+    "Amazing Place!", "that is Amazing!", "WOW", "Perfect!"]
+
 
 class InstaComment ():
     def __init__(self, username, pw):
@@ -35,11 +38,13 @@ class InstaComment ():
         self.web_driver.get("https://instagram.com")
         sleep(2)
         self.web_driver.find_element_by_name("username").send_keys(username)
+        sleep(1)
         self.web_driver.find_element_by_name("password").send_keys(pw)
+        sleep (2)
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
         sleep(3)
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
-
+        sleep(3)
         for i in range (10):
             self.iterate_hastag(self.hashtag())
         self.web_driver.quit()
@@ -48,32 +53,20 @@ class InstaComment ():
         """
             Will iterate through the hastags 
         """
-<<<<<<< HEAD
-        ##Search the Hashtag
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtag_global)
-=======
-        ##Checks for the Hashtag entry
-        self.used_hs = self.hashtag()  
 
         ##Search the Hashtag
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(self.used_hs)
->>>>>>> 8751377e57a215e9a1b3f278561540575f0aa286
-        sleep(3)
+        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtag_global)
+
+        sleep(4)
 
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]").click()
         
         sleep(3)
         
-<<<<<<< HEAD
-        self.iterate_photos(hashtag_global)
+        self.iterate_photos("top",hashtag_global)
+        self.iterate_photos("recent",hashtag_global)
         
-    def iterate_photos(self,hashtag_global_photos):
-=======
-        self.iterate_photos("top")
-        self.iterate_photos("recent")
-        
-    def iterate_photos(self, section):
->>>>>>> 8751377e57a215e9a1b3f278561540575f0aa286
+    def iterate_photos(self, section,hashtag_global):
         """
             Will do the iteration through the photos 
         """
@@ -89,7 +82,7 @@ class InstaComment ():
                 path_j = "/div[" + str(j) + "]"
 
                 #Generate the Comment for that point
-                self.used_comment = self.comment(self.used_hs)
+                self.used_comment = self.comment()
                 #click the image
                 real_path=path_init+path_i+path_j+path_end
                 self.web_driver.find_element_by_xpath(real_path).click()
@@ -106,14 +99,9 @@ class InstaComment ():
                 sleep(2)
         
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[2]/button").click()
-<<<<<<< HEAD
-                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.comment(hashtag_global_photos))
-=======
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.used_comment)
-                sleep(2)
->>>>>>> 8751377e57a215e9a1b3f278561540575f0aa286
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
-                sleep(2)
+                sleep(3)
                 
                 ##This is the close Button
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
@@ -126,13 +114,12 @@ class InstaComment ():
         choose = random.randint(0,len(poss)-1)
         return poss[choose]
     
-    def comment (self,hs):
+    def comment (self):
         """
             Will choose a comment depending on the hashtag that was opened
         """
-        comment = comm[hs]
-        num = random.randint(0,len(comment)-1)
-        comment = comment[num]
+        num = random.randint(0,len(comm)-1)
+        comment = comm[num]
         return comment
 
     def has_like (self):
