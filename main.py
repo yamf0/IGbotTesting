@@ -8,6 +8,7 @@ from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common import keys
 from selenium.webdriver.remote.command import Command
+from selenium.common.exceptions import NoSuchElementException
 import random
 import math
 
@@ -44,7 +45,9 @@ class InstaComment ():
         sleep (3)
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
         sleep(3)
-        self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
+
+        self.Exception_Handler("/html/body/div[4]/div/div/div[3]/button[2]")
+        #self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
         sleep(3)
         for i in range (10):
             self.iterate_hastag(self.hashtag())
@@ -60,7 +63,8 @@ class InstaComment ():
 
         sleep(4)
 
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]").click()
+        self.Exception_Handler("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]")
+        #self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]").click()
         
         sleep(3)
         
@@ -86,7 +90,9 @@ class InstaComment ():
                 self.used_comment = self.comment()
                 #click the image
                 real_path=path_init+path_i+path_j+path_end
-                self.web_driver.find_element_by_xpath(real_path).click()
+                ##HERE WE TRY THE EXCEPTION HANDLER
+                self.Exception_Handler(real_path)
+                #self.web_driver.find_element_by_xpath(real_path).click()
                 sleep(5)
 
                 ##Search previous Like
@@ -96,7 +102,8 @@ class InstaComment ():
                     continue
                 
                 #Click Like
-                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button").click()
+                self.Exception_Handler("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button")
+                #self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button").click()
                 sleep(2)
                 choice = random.choices([True,False],[((math.e)**((self.com_count/10)-1)),((math.e)**(-self.com_count/10))],k=1)
                 print (choice[0])
@@ -133,12 +140,33 @@ class InstaComment ():
         """
             Will see if the chosen photo has already a like 
         """
-        fill = self.web_driver.find_element_by_xpath("//*[local-name()='span' and @class='fr66n']/*[local-name()='button']/*[local-name()='svg']").get_attribute("fill")
-        print(fill)
+        while (True):
+            try:
+                fill = self.web_driver.find_element_by_xpath("//*[local-name()='span' and @class='fr66n']/*[local-name()='button']/*[local-name()='svg']").get_attribute("fill")
+                print(fill)
+                break
+            except Exception as ex:
+                print (ex)
+                sleep (5)
+                continue
+
         if fill == "#ed4956":
             return True
         else:
             return False
+
+    def Exception_Handler (self,xpath):
+        """
+            Method will try to click Xpath, if not find will wait untill it is found (Solves Bad internet Issue)
+        """
+        while (True):
+            try:
+                self.web_driver.find_element_by_xpath(xpath).click()
+                break
+            except Exception as ex:
+                print (ex)
+                sleep(5)
+                continue
 
 
 def main ():
