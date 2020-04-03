@@ -115,6 +115,7 @@ class InstaComment ():
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
                     sleep(3)
                     if (self.com_count==0):
+                        self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                         return
                 
                 ##This is the close Button
