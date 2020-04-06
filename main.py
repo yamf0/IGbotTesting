@@ -18,7 +18,7 @@ print (path_driver)
 
 
 poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
-"#wanderlusting", "#wanderluster", "#europetravel", "#architecture","#sunset","#traveltheworld"]
+"#wanderlusting", "#wanderluster", "#europetravel","#sunset","#traveltheworld", "#travellingthroughtheworld"]
 comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great Photos", "This place is amazing",\
     "This is amazing", "Congrats for the great photo", "What a Pic!!!", "That is great!",\
     "Wow that pic!", "This place is amazing", "Keep up the great photos", "Amazing",\
