@@ -127,7 +127,9 @@ class InstaComment ():
             Will choose randomly a Hashtag and rerturn its value
         """
         choose = random.randint(0,len(poss)-1)
-        return poss[choose]
+        hashtag = poss[choose]
+        poss.pop(choose)
+        return hashtag
     
     def comment (self):
         """
