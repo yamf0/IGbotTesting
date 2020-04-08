@@ -10,6 +10,7 @@ from selenium.webdriver.common import keys
 from selenium.webdriver.remote.command import Command
 from selenium.common.exceptions import NoSuchElementException
 import random
+import argparse
 import math
 
 #Find PATH to current Directory (to find the driver)
@@ -173,9 +174,17 @@ class InstaComment ():
 
 
 def main ():
-    
-    Bot = InstaComment('mexicansombreroless','mannheimzittau')
-    
+    ##Create the argument parser to know which account will be runned the code on
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-a", "--account", required=True,\
+        help="Which account will be used (s for mexicansombrero // less for mexicansombreroless")
+    args = vars(ap.parse_args())
+
+    ##Start code with required account
+    if args['account'] == "less":
+        Bot = InstaComment('mexicansombreroless','mannheimzittau')
+    if args['account'] == "s":
+        Bot = InstaComment('mexicansombrero','YaelHugoPato')
 
 if __name__ == "__main__":
     main()
