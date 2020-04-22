@@ -144,6 +144,7 @@ class InstaComment ():
         """
             Will see if the chosen photo has already a like 
         """
+        i=0;
         while (True):
             try:
                 fill = self.web_driver.find_element_by_xpath("//*[local-name()='span' and @class='fr66n']/*[local-name()='button']/*[local-name()='svg']").get_attribute("fill")
@@ -151,7 +152,10 @@ class InstaComment ():
                 break
             except Exception as ex:
                 print (ex)
-                sleep (5)
+                sleep (3)
+                i+= 1
+                if (i == 5) :
+                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                 continue
 
         if fill == "#ed4956":
@@ -167,11 +171,10 @@ class InstaComment ():
             try:
                 self.web_driver.find_element_by_xpath(xpath).click()
                 break
-            except Exception as ex:
+            except Exception as ex:  
                 print (ex)
-                sleep(5)
+                sleep(3)
                 continue
-
 
 def main ():
     ##Create the argument parser to know which account will be runned the code on
