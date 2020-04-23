@@ -13,6 +13,9 @@ import random
 import argparse
 import math
 
+bandera = False;
+bandera1 = False;
+
 #Find PATH to current Directory (to find the driver)
 path_driver = os.path.dirname(os.path.realpath(__file__))
 print (path_driver)
@@ -93,7 +96,7 @@ class InstaComment ():
                 real_path=path_init+path_i+path_j+path_end
                 ##HERE WE TRY THE EXCEPTION HANDLER
                 self.Exception_Handler(real_path)
-                #self.web_driver.find_element_by_xpath(real_path).click()
+                
                 sleep(5)
 
                 ##Search previous Like
@@ -114,11 +117,14 @@ class InstaComment ():
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[2]/button").click()
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.used_comment)
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
-                    sleep(3)
+                    sleep(1)
+                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                    if(self.CheckComment(real_path)):
+                        self.Scroll()
+                        return
                     if (self.com_count==0):
                         self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
-                        return
-                
+                        return                
                 ##This is the close Button
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                 sleep(2)
@@ -175,6 +181,28 @@ class InstaComment ():
                 print (ex)
                 sleep(3)
                 continue
+
+    def CheckComment(self,realpath):
+        #Opening photo again
+        self.web_driver.find_element_by_xpath(realpath).click()
+        sleep(2)
+        try:
+            self.web_driver.find_element_by_xpath("//*[local-name()='div']/*[local-name()='article']//*[contains(text(),'mexicansombreroless')]")
+            print("penezote")
+            return True
+        except:
+            print("penezito")
+            return False
+
+    def Scroll (self):
+        self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+        sleep(2)
+        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[1]/a").click()
+        #self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[1]/a/div/div/img").click()
+        sleep(2)
+        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/section/div[3]/div[2]/div[2]/div/div/div/div[1]/button").click()
+        sleep(300)
+        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/div/div/section/div[2]/button[3]").click()   
 
 def main ():
     ##Create the argument parser to know which account will be runned the code on
