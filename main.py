@@ -12,6 +12,8 @@ from selenium.common.exceptions import NoSuchElementException
 import random
 import argparse
 import math
+import logging
+from logging import StreamHandler
 
 bandera = False;
 bandera1 = False;
@@ -20,6 +22,23 @@ bandera1 = False;
 path_driver = os.path.dirname(os.path.realpath(__file__))
 print (path_driver)
 
+#------------------LOGGER CONFIGURATION------------------------------#
+
+##Create a custom logger for this .py
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+##Creates a Handler (this way only logger will print in terminal logging msg)
+handler = logging.StreamHandler()
+handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - at line - %(lineno)s - %(levelname)s - %(message)s',style="%")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+##Add all .DEBUG msg to specific File
+file = logging.FileHandler("msg.log",mode='w')
+file.setFormatter(formatter)
+logger.addHandler(file)
 
 poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
 "#wanderlusting", "#wanderluster", "#europetravel","#sunset","#traveltheworld", "#travellingthroughtheworld"]
@@ -50,16 +69,19 @@ class InstaComment ():
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
         sleep(3)
 
+        logger.info("Account successfully opened")
+
         self.Exception_Handler("/html/body/div[4]/div/div/div[3]/button[2]")
         #self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
         sleep(3)
         for i in range (10):
+            logger.info("Hashtag number: {} ".format(i))
             self.iterate_hastag(self.hashtag())
         self.web_driver.quit()
 
     def iterate_hastag(self,hashtag_global):
         """
-            Will iterate through the hastags 
+            Will iterate through the hastags
         """
         self.com_count = 10
         ##Search the Hashtag
@@ -67,6 +89,7 @@ class InstaComment ():
 
         sleep(4)
 
+        logger.info("Hashtag is: " + hashtag_global)
         self.Exception_Handler("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]")
         #self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]").click()
         
@@ -157,7 +180,7 @@ class InstaComment ():
                 print(fill)
                 break
             except Exception as ex:
-                print (ex)
+                logger.exception("Could not Find the Like Button")
                 sleep (3)
                 i+= 1
                 if (i == 5) :
@@ -177,8 +200,9 @@ class InstaComment ():
             try:
                 self.web_driver.find_element_by_xpath(xpath).click()
                 break
-            except Exception as ex:  
-                print (ex)
+
+            except Exception as ex:
+                logger.exception("Unable to access xpath")
                 sleep(3)
                 continue
 
@@ -213,8 +237,10 @@ def main ():
 
     ##Start code with required account
     if args['account'] == "less":
+        logger.debug("Running in Mexicansombreroless account")
         Bot = InstaComment('mexicansombreroless','mannheimzittau')
     if args['account'] == "s":
+        logger.debug("Running in Mexicansombrero account")
         Bot = InstaComment('mexicansombrero','YaelHugoPato')
 
 if __name__ == "__main__":
