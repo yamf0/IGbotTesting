@@ -3,20 +3,22 @@
     Created: 03,2020
     Purpose: Automation of interaction in Instagram fro Mexican Sombrero & -less. 
 '''
+
 import os
+#Library to control the timings of execution
 from time import sleep
+#Principal library for web scrapping
 from selenium import webdriver
 from selenium.webdriver.common import keys
 from selenium.webdriver.remote.command import Command
 from selenium.common.exceptions import NoSuchElementException
+#Libraries used to avoid being banned
 import random
 import argparse
 import math
+#Library to print personalize message. Allows more control in message control 
 import logging
 from logging import StreamHandler
-
-bandera = False;
-bandera1 = False;
 
 #Find PATH to current Directory (to find the driver)
 path_driver = os.path.dirname(os.path.realpath(__file__))
@@ -40,6 +42,7 @@ file = logging.FileHandler("msg.log",mode='w')
 file.setFormatter(formatter)
 logger.addHandler(file)
 
+#Lists of hashstags & comments.
 poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
 "#wanderlusting", "#wanderluster", "#europetravel","#sunset","#traveltheworld", "#travellingthroughtheworld"]
 comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great Photos", "This place is amazing",\
