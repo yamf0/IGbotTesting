@@ -98,7 +98,7 @@ class InstaComment ():
         sleep(3)
         self.iterate_photos("top",hashtag_global)
         
-    def iterate_photos(self, section,hashtag_global):
+    def iterate_photos(self, section, hashtag_global):
         """
             Will do the iteration through the photos 
         """
@@ -154,7 +154,7 @@ class InstaComment ():
                 ##This is the close Button
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                 sleep(2)
-        ##Rerun HAshtag for recent photos
+        ##Rerun Hashtag for recent photos
         self.iterate_photos("recent",hashtag_global)
 
     def hashtag(self):
@@ -216,7 +216,7 @@ class InstaComment ():
         self.web_driver.find_element_by_xpath(realpath).click()
         sleep(2)
         try:
-            self.web_driver.find_element_by_xpath("//*[local-name()='div']/*[local-name()='article']//*[contains(text(),{})]".format(self.username))
+            self.web_driver.find_element_by_xpath("//*[local-name()='div']/*[local-name()='article']//*[contains(text(),\"{}\")]".format(self.used_comment))
             logger.info("Comment was succesfully made")
             return True
         except:
