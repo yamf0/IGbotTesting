@@ -5,9 +5,13 @@
 '''
 
 import os
+<<<<<<< HEAD
 #Library to control the timings of execution
 from time import sleep
 #Principal library for web scrapping
+=======
+from time import sleep, localtime
+>>>>>>> 348fd674dac29f1be789d8455ff9e5e02fbbf320
 from selenium import webdriver
 from selenium.webdriver.common import keys
 from selenium.webdriver.remote.command import Command
@@ -62,6 +66,7 @@ comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great 
 
 class InstaComment ():
     def __init__(self, username, pw):
+        self.username = username
         self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
         self.web_driver.get("https://instagram.com")
         sleep(2)
@@ -77,7 +82,7 @@ class InstaComment ():
         self.Exception_Handler("/html/body/div[4]/div/div/div[3]/button[2]")
         #self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
         sleep(3)
-        for i in range (10):
+        for i in range (4):
             logger.info("Hashtag number: {} ".format(i))
             self.iterate_hastag(self.hashtag())
         self.web_driver.quit()
@@ -86,7 +91,8 @@ class InstaComment ():
         """
             Will iterate through the hastags
         """
-        self.com_count = 10
+        self.com_count = 14
+        self.max_comm = self.com_count
         ##Search the Hashtag
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtag_global)
 
@@ -97,11 +103,9 @@ class InstaComment ():
         #self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]").click()
         
         sleep(3)
-        
         self.iterate_photos("top",hashtag_global)
-        self.iterate_photos("recent",hashtag_global)
         
-    def iterate_photos(self, section,hashtag_global):
+    def iterate_photos(self, section, hashtag_global):
         """
             Will do the iteration through the photos 
         """
@@ -131,29 +135,34 @@ class InstaComment ():
                     sleep(1)
                     continue
                 
-                #Click Like
-                self.Exception_Handler("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button")
-                #self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button").click()
-                sleep(2)
-                choice = random.choices([True,False],[((math.e)**((self.com_count/10)-1)),((math.e)**(-self.com_count/10))],k=1)
+
+                choice = random.choices([True,False],[((math.e)**((self.com_count/self.max_comm)-1)),((math.e)**(-self.com_count/self.max_comm))],k=1)
                 print (choice[0])
                 print(self.com_count)
                 if (choice[0]):
+                    
                     self.com_count = self.com_count - 1
+                    #Click Like
+                    self.Exception_Handler("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button")
+                    sleep(2)
+                    ##Click comment
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[2]/button").click()
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.used_comment)
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
                     sleep(1)
+                    ##close photo
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
-                    if(self.CheckComment(real_path)):
+                    if not (self.CheckComment(real_path)):
                         self.Scroll()
-                        return
+                        return 
                     if (self.com_count==0):
                         self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                         return                
                 ##This is the close Button
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                 sleep(2)
+        ##Rerun Hashtag for recent photos
+        self.iterate_photos("recent",hashtag_global)
 
     def hashtag(self):
         """
@@ -183,7 +192,7 @@ class InstaComment ():
                 print(fill)
                 break
             except Exception as ex:
-                logger.exception("Could not Find the Like Button")
+                logger.warning("Could not Find the Like Button")
                 sleep (3)
                 i+= 1
                 if (i == 5) :
@@ -205,7 +214,7 @@ class InstaComment ():
                 break
 
             except Exception as ex:
-                logger.exception("Unable to access xpath")
+                logger.warning("Unable to access xpath")
                 sleep(3)
                 continue
 
@@ -214,22 +223,26 @@ class InstaComment ():
         self.web_driver.find_element_by_xpath(realpath).click()
         sleep(2)
         try:
-            self.web_driver.find_element_by_xpath("//*[local-name()='div']/*[local-name()='article']//*[contains(text(),'mexicansombreroless')]")
-            print("penezote")
+            self.web_driver.find_element_by_xpath("//*[local-name()='div']/*[local-name()='article']//*[contains(text(),\"{}\")]".format(self.used_comment))
+            logger.info("Comment was succesfully made")
             return True
         except:
-            print("penezito")
+            logger.warning("Unable to find Comment")
             return False
 
     def Scroll (self):
+        ##Close the Photo
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
         sleep(2)
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[1]/a").click()
+        ##Click Return "Instagram Button"
+        self.Exception_Handler("/html/body/div[1]/section/nav/div[2]/div/div/div[1]/a")
+        logger.info("returned to Main page")
         #self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[1]/a/div/div/img").click()
         sleep(2)
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/section/div[3]/div[2]/div[2]/div/div/div/div[1]/button").click()
+        self.Exception_Handler("/html/body/div[1]/section/main/section/div[1]/div/div/div/div[1]/button")
+        logger.info("start checking histories, expected return at: {} minutes".format(localtime()[4] + 5))
         sleep(300)
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/div/div/section/div[2]/button[3]").click()   
+        self.Exception_Handler("/html/body/div[1]/section/div/div/section/div[2]/button[3]")  
 
 def main ():
     ##Create the argument parser to know which account will be runned the code on
@@ -245,6 +258,9 @@ def main ():
     if args['account'] == "s":
         logger.debug("Running in Mexicansombrero account")
         Bot = InstaComment('mexicansombrero','YaelHugoPato')
+    if args['account'] == "test":
+        logger.debug("Running in Test account")
+        Bot = InstaComment('photoandtravel2020','mannheimzittau')
 
 if __name__ == "__main__":
     main()
