@@ -1,7 +1,7 @@
 '''
     Developers: Yael Abelardo Martínez & Hugo Armando Zepeda Ruiz
     Created: 03,2020
-    Purpose: Automation of interaction in Instagram fro Mexican Sombrero & -less. 
+    Purpose: Automation of interaction in Instagram from Mexican Sombrero & -less. 
 '''
 
 import os
