@@ -14,6 +14,7 @@ import argparse
 import math
 import logging
 from logging import StreamHandler
+import json
 
 bandera = False;
 bandera1 = False;
@@ -60,12 +61,18 @@ comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great 
 class InstaComment ():
     def __init__(self, username, pw):
         self.username = username
+        self.pw = pw
+        #create photo data dictionary
+        self.photo_data = {}
+
+    def start_account(self):
+
         self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
         self.web_driver.get("https://instagram.com")
         sleep(2)
-        self.web_driver.find_element_by_name("username").send_keys(username)
+        self.web_driver.find_element_by_name("username").send_keys(self.username)
         sleep(1)
-        self.web_driver.find_element_by_name("password").send_keys(pw)
+        self.web_driver.find_element_by_name("password").send_keys(self.pw)
         sleep (3)
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
         sleep(3)
@@ -75,6 +82,7 @@ class InstaComment ():
         self.Exception_Handler("/html/body/div[4]/div/div/div[3]/button[2]")
         #self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
         sleep(3)
+
         for i in range (4):
             logger.info("Hashtag number: {} ".format(i))
             self.iterate_hastag(self.hashtag())
@@ -84,6 +92,9 @@ class InstaComment ():
         """
             Will iterate through the hastags
         """
+        #create dict
+        self.photo_data.update({hashtag_global:{}})
+
         self.com_count = 14
         self.max_comm = self.com_count
         ##Search the Hashtag
@@ -128,7 +139,8 @@ class InstaComment ():
                     sleep(1)
                     continue
                 
-
+                photo_info = self.get_photo_info(hashtag_global)
+                sleep(5)
                 choice = random.choices([True,False],[((math.e)**((self.com_count/self.max_comm)-1)),((math.e)**(-self.com_count/self.max_comm))],k=1)
                 print (choice[0])
                 print(self.com_count)
@@ -154,6 +166,7 @@ class InstaComment ():
                 ##This is the close Button
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                 sleep(2)
+        if (section == "recent"): return
         ##Rerun Hashtag for recent photos
         self.iterate_photos("recent",hashtag_global)
 
@@ -237,6 +250,38 @@ class InstaComment ():
         sleep(300)
         self.Exception_Handler("/html/body/div[1]/section/div/div/section/div[2]/button[3]")  
 
+    def get_photo_info(self, hashtag_global):
+
+        photo_info = {}
+        photo_number = self.max_comm - self.com_count 
+        photo_profile = self.attributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
+        photo_likes = self.attributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text")
+        photo_info_insta = self.attributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt")
+        photo_link = self.attributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
+        photo_info.update({
+            "Profile": photo_profile,
+            "likes": photo_likes,
+            "info_insta": photo_info_insta,
+            "link": photo_link,
+        })
+        self.photo_data[hashtag_global].update({photo_number:photo_info})
+        self.write_info()
+
+    
+    
+    def attributes (self, xpath, attr):
+        try:
+            if (attr == 'text'):
+                return self.web_driver.find_element_by_xpath(xpath).text
+            else:
+                return self.web_driver.find_element_by_xpath(xpath).get_attribute(attr)
+        except:
+            print("element not found")
+
+    def write_info(self):
+        with open ("photo_info.json", "w") as file:
+            json.dump(self.photo_data, file, sort_keys=True, indent=4, separators=(',',':'))
+
 def main ():
     ##Create the argument parser to know which account will be runned the code on
     ap = argparse.ArgumentParser()
@@ -248,12 +293,15 @@ def main ():
     if args['account'] == "less":
         logger.debug("Running in Mexicansombreroless account")
         Bot = InstaComment('mexicansombreroless','mannheimzittau')
+        Bot.start_account()
     if args['account'] == "s":
         logger.debug("Running in Mexicansombrero account")
         Bot = InstaComment('mexicansombrero','YaelHugoPato')
+        Bot.start_account()
     if args['account'] == "test":
         logger.debug("Running in Test account")
         Bot = InstaComment('photoandtravel2020','mannheimzittau')
+        Bot.start_account()
 
 if __name__ == "__main__":
     main()
