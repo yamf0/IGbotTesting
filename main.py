@@ -3,21 +3,23 @@
     Created: 03,2020
     Purpose: Automation of interaction in Instagram fro Mexican Sombrero & -less. 
 '''
+
 import os
-from time import sleep, localtime
+#Library to control the timings of execution
+from time import sleep
+#Principal library for web scrapping
 from selenium import webdriver
 from selenium.webdriver.common import keys
 from selenium.webdriver.remote.command import Command
 from selenium.common.exceptions import NoSuchElementException
+#Libraries used to avoid being banned
 import random
 import argparse
 import math
+#Library to print personalize message. Allows more control in message control 
 import logging
 from logging import StreamHandler
 import json
-
-bandera = False;
-bandera1 = False;
 
 #Find PATH to current Directory (to find the driver)
 path_driver = os.path.dirname(os.path.realpath(__file__))
@@ -41,6 +43,7 @@ file = logging.FileHandler("msg.log",mode='w')
 file.setFormatter(formatter)
 logger.addHandler(file)
 
+#Lists of hashstags & comments.
 poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
 "#wanderlusting", "#wanderluster", "#europetravel","#sunset","#traveltheworld", "#travellingthroughtheworld"]
 comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great Photos", "This place is amazing",\
@@ -283,6 +286,48 @@ class InstaComment ():
             json.dump(self.photo_data, file, sort_keys=True, indent=4, separators=(',',':'))
 
 def main ():
+    #Little GUI
+    var = input("Running Mexican(1) or testing account(2)?")
+    if(var == '1'):
+        var_1 = input("Running Mexican(1) or Mexicanless(2)?")
+        if (var_1 == '1'):
+            logger.debug("Running in Mexicansombrero account")
+            Bot = InstaComment('mexicansombrero','YaelHugoPato')
+            Bot.start_account()
+        elif (var_1 == '2'): 
+            logger.debug("Running in Mexicansombreroless account")
+            Bot = InstaComment('mexicansombreroless','mannheimzittau')
+            Bot.start_account()
+        else:
+            print("Stop playing around! Work please")
+    elif(var == '2'):
+        var_3 = input("Are you Hugo(h), Yael(y)?")
+        if(var_3 == 'h') | (var_3 == 'y'):
+            logger.debug("Running in Test account")
+            Bot = InstaComment('photoandtravel2020','mannheimzittau')
+            Bot.start_account()
+        else:
+            account = input("Please give the account username")
+            password = input("Please give the password")
+            print("You entered: " + account)
+            print("You entered: " + password)
+            var_2 = input("Is the data true(1)? Any other number for no.")
+            if(var_2 == '1'):
+                logger.debug("Running in Test account")
+                Bot = InstaComment(account,password)
+                Bot.start_account()
+            else:
+                print("Last change, bitch")
+                account_1 = input("Please give again the account username")
+                password_1 = input("Please give again the password")
+                logger.debug("Running in Test account")
+                Bot = InstaComment(account_1,password_1)
+                Bot.start_account()
+    else: 
+        print("Stop playing around! Work please")
+
+
+    """
     ##Create the argument parser to know which account will be runned the code on
     ap = argparse.ArgumentParser()
     ap.add_argument("-a", "--account", required=True,\
@@ -302,6 +347,7 @@ def main ():
         logger.debug("Running in Test account")
         Bot = InstaComment('photoandtravel2020','mannheimzittau')
         Bot.start_account()
+        """
 
 if __name__ == "__main__":
     main()
