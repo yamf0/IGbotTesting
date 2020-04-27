@@ -287,7 +287,7 @@ class InstaComment ():
 
 def main ():
     #Little GUI
-    var = input("Running Mexican(1) or testing account(2)?")
+    var = input("Running Mexican(1) // test code in Mexico(2) // test code in Germany (3) ")
     if(var == '1'):
         var_1 = input("Running Mexican(1) or Mexicanless(2)?")
         if (var_1 == '1'):
@@ -301,30 +301,23 @@ def main ():
         else:
             print("Stop playing around! Work please")
     elif(var == '2'):
-        var_3 = input("Are you Hugo(h), Yael(y)?")
-        if(var_3 == 'h') | (var_3 == 'y'):
             logger.debug("Running in Test account")
             Bot = InstaComment('photoandtravel2020','mannheimzittau')
             Bot.start_account()
-        else:
-            account = input("Please give the account username")
-            password = input("Please give the password")
-            print("You entered: " + account)
-            print("You entered: " + password)
-            var_2 = input("Is the data true(1)? Any other number for no.")
-            if(var_2 == '1'):
-                logger.debug("Running in Test account")
-                Bot = InstaComment(account,password)
-                Bot.start_account()
-            else:
-                print("Last change, bitch")
-                account_1 = input("Please give again the account username")
-                password_1 = input("Please give again the password")
-                logger.debug("Running in Test account")
-                Bot = InstaComment(account_1,password_1)
-                Bot.start_account()
+    elif(var == 3):
+        logger.debug("Running in Test account")
+        Bot = InstaComment('travelandphoto2020','mannheimzittau')
+        Bot.start_account()      
     else: 
-        print("Stop playing around! Work please")
+        account = input("Please give the account username")
+        password = input("Please give the password")
+        print("You entered: " + account)
+        print("You entered: " + password)
+        var_2 = input("Is the data true(1)? Any other number for no.")
+        if(var_2 == '1'):
+            logger.debug("Running in Test account")
+            Bot = InstaComment(account,password)
+            Bot.start_account()
 
 
     """
