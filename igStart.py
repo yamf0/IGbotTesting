@@ -19,7 +19,7 @@ import logging
 from logging import StreamHandler
 
 
-##path to chrome driver##
+#path to chrome driver##
 path_driver = os.path.dirname(os.path.realpath(__file__))
 print (path_driver)
 
@@ -32,20 +32,20 @@ class igStart():
 
     def openAccount(self):
         """
-            start IG
+            start Chrome & IG
         """
-        ##Open chrome
+        #Open chrome
         self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
         self.web_driver.get("https://instagram.com")
         sleep(2)
-        ##Input account and Pw
+        #Input account and pw
         self.web_driver.find_element_by_name("username").send_keys(self.username)
         sleep(1)
         self.web_driver.find_element_by_name("password").send_keys(self.pw)
         sleep (1)
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
         sleep(3)
-        ##click Accept
+        #click accept
         self.exceptionHandler("/html/body/div[4]/div/div/div[3]/button[2]")
         sleep(3)
         ##We are in
@@ -53,6 +53,9 @@ class igStart():
     def exceptionHandler (self,xpath):
         """
             Method will try to click Xpath, if not find will wait untill it is found (Solves Bad internet Issue)
+
+            Variables: 
+                xpath: html path to search for
         """
         while (True):
             try:
