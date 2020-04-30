@@ -48,6 +48,10 @@ class igIteraction(igStart):
     def __init__(self,username,pw):
         """
             Starting the instagram iteraction 
+
+            Variables:
+                username: account name
+                pw: password name
         """
         self.username = username
         self.pw = pw
@@ -62,6 +66,9 @@ class igIteraction(igStart):
     def iterateHastag(self,hashtagGlobal):
         """
             Will iterate through the hastags
+
+            Variables:
+                hashtagGlobal: hashtag used in iteration
         """
         self.comCount = 14
         self.maxComm = self.comCount
@@ -74,7 +81,10 @@ class igIteraction(igStart):
     
     def iteratePhotos(self, section, hashtagGlobal):
         """
-            Will do the iteration through the photos 
+            Will do the iteration through the photos
+
+            Variables:
+                section: HTML div element
         """
         if section == "top" :
             pathInit = "/html/body/div[1]/section/main/article/div[1]/div/div/"    
@@ -89,10 +99,10 @@ class igIteraction(igStart):
                 self.usedComment = self.generateComment()
                 #click the image
                 realPath=pathInit+pathI+pathJ+pathEnd
-                ##HERE WE TRY THE EXCEPTION HANDLER
+                #HERE WE TRY THE EXCEPTION HANDLER
                 self.exceptionHandler(realPath)
                 sleep(5)
-                ##Search previous Like
+                #Search previous Like
                 if (self.havingLike()):
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                     sleep(1)
@@ -121,11 +131,11 @@ class igIteraction(igStart):
                     if (self.comCount==0):
                         self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                         return                
-                ##This is the close button
+                #This is the close button
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                 sleep(2)
         if (section == "recent"): return
-        ##Rerun Hashtag for recent photos
+        #Re-run Hashtag for recent photos
         self.iteratePhotos("recent",hashtagGlobal)
 
     def generateHashtag(self):
