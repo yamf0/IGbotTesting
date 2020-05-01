@@ -51,7 +51,7 @@ comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great 
     "Wow that pic!", "This place is amazing", "Keep up the great photos", "Amazing",\
     "Perfect!", "Amazing", "That is nice!", "Great",\
     "What a destination", "That is amazing", "Great!!!",\
-    "Wish to be there","Cannot wait to be there","Maybe this is the sombrero next destination","Nice photo",\
+    "Wish to be there","Cannot wait to be there","Nice photo",\
     "Really love this part of the day",\
     "Wish to be there","Cannot wait to be there","Maybe this is the sombrero next destination",\
     "WOW", "This is Perfect", "Congrats for the great Photo", "Simply Beautiful",\
@@ -271,7 +271,6 @@ class InstaComment ():
         self.write_info()
 
     
-    
     def attributes (self, xpath, attr):
         try:
             if (attr == 'text'):
@@ -304,7 +303,7 @@ def main ():
             logger.debug("Running in Test account")
             Bot = InstaComment('photoandtravel2020','mannheimzittau')
             Bot.start_account()
-    elif(var == 3):
+    elif(var == "3"):
         logger.debug("Running in Test account")
         Bot = InstaComment('travelandphoto2020','mannheimzittau')
         Bot.start_account()      

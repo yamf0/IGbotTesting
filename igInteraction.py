@@ -21,6 +21,7 @@ import math
 #Library to print personalize message. Allows more control in message control 
 import logging
 from logging import StreamHandler
+from igJSON import jsonConstructor
 
 #Lists of hashstags & comments.
 poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
@@ -41,7 +42,7 @@ comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great 
 
 
 
-class igIteraction(igStart):
+class igIteraction(jsonConstructor):
     """
         Class that starts the interaction through Likes & Comments
     """
@@ -50,14 +51,15 @@ class igIteraction(igStart):
             Starting the instagram iteraction 
 
             Variables:
+
                 username: account name
                 pw: password name
         """
         self.username = username
         self.pw = pw
-        #super.__init__(self,username,pw)
+        #self.dicInit()
         self.openAccount()
-
+        self.hashtagData = {}
         for i in range (5):
             #logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
@@ -70,6 +72,7 @@ class igIteraction(igStart):
             Variables:
                 hashtagGlobal: hashtag used in iteration
         """
+        self.hashtagData.update({hashtagGlobal:{}})
         self.comCount = 14
         self.maxComm = self.comCount
         ##Search the Hashtag
@@ -112,6 +115,23 @@ class igIteraction(igStart):
                 print (choice[0])
                 print(self.comCount)
                 if (choice[0]):
+                    ##Get info Photos##
+                    photoInfo = {}
+                    photoNumber = self.maxComm - self.comCount 
+                    photoProfile = self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
+                    photoLikes = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text")
+                    photoInfoInsta = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt")
+                    photoLink = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
+                    photoInfo.update({
+                        "Profile": photoProfile,
+                        "likes": photoLikes,
+                        "info_insta": photoInfoInsta,
+                        "link": photoLink,
+                    })
+                    self.hashtagData[hashtagGlobal].update({photoNumber:photoInfo})
+                    print(self.hashtagData)
+                    self.writeInfo("photoInfo","w",self.hashtagData)
+
                     self.comCount = self.comCount - 1
                     #Click Like
                     self.exceptionHandler("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button")

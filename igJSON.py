@@ -17,9 +17,7 @@ class jsonConstructor (igStart):
     """
 
     def __init__(self):
-        ##construct General Dictionary##
-        self.dictionary = {}
-
+        pass
 
     def getAttributes(self, path, attribute):
         """
@@ -50,23 +48,17 @@ class jsonConstructor (igStart):
 
             ->dictAppend:  in which dictionary will the data be saved
         """
-
-        dictAppend.update({key : data})
+        dictAppend = dictAppend.update({key : data})
     
 
-    def writeInfo(self, jsonPath, action):
+    def writeInfo(self, jsonPath, action, dictionary):
         """
                 Write info to JSON FILE 
 
-                ->jsonPath:  jason file name
+                ->jsonPath:  json file name
                 
                 ->action: w for overwirte a for append
         """
         jsonPath = jsonPath + ".json"
         with open (jsonPath, action) as file:
-            json.dump(self.photo_data, file, sort_keys=True, indent=4, separators=(',',':'))
-
-    
-
-
-
+            json.dump(dictionary, file, sort_keys=True, indent=4, separators=(',',':'))
