@@ -48,8 +48,11 @@ class jsonConstructor (igStart):
 
             ->dictAppend:  in which dictionary will the data be saved
         """
-        dictAppend = dictAppend.update({key : data})
-    
+        if (key in dictAppend.keys()):
+            dictAppend = dictAppend[key].update([data])
+        else:
+            dictAppend = dictAppend.update({key : data})
+        return dictAppend
 
     def writeInfo(self, jsonPath, action, dictionary):
         """

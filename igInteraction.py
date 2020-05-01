@@ -118,18 +118,13 @@ class igIteraction(jsonConstructor):
                     ##Get info Photos##
                     photoInfo = {}
                     photoNumber = self.maxComm - self.comCount 
-                    photoProfile = self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
-                    photoLikes = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text")
-                    photoInfoInsta = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt")
-                    photoLink = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
-                    photoInfo.update({
-                        "Profile": photoProfile,
-                        "likes": photoLikes,
-                        "info_insta": photoInfoInsta,
-                        "link": photoLink,
-                    })
+                    photoProfile =self.append(self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text"), "Profile",photoInfo)
+                    photoLikes = self.append(self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text"), "Likes",photoInfo)
+                    photoInfoInsta = self.append(self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt"), "Info",photoInfo)
+                    photoLink = self.append(self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src"), "Link",photoInfo)
+                    
+                    
                     self.hashtagData[hashtagGlobal].update({photoNumber:photoInfo})
-                    print(self.hashtagData)
                     self.writeInfo("photoInfo","w",self.hashtagData)
 
                     self.comCount = self.comCount - 1

@@ -28,7 +28,7 @@ class igStart():
         Class that starts Chrome Instance and opens IG
     """
     def __init__(self):
-       self.photo_data = {}
+       pass
 
     def openAccount(self):
         """
