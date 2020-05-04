@@ -49,9 +49,9 @@ class jsonConstructor (igStart):
             ->dictAppend:  in which dictionary will the data be saved
         """
         if (key in dictAppend.keys()):
-            dictAppend = dictAppend[key].update([data])
+            dictAppend[key].update(data)
         else:
-            dictAppend = dictAppend.update({key : data})
+            dictAppend.update({key : data})
         return dictAppend
 
     def writeInfo(self, jsonPath, action, dictionary):
@@ -66,15 +66,14 @@ class jsonConstructor (igStart):
         with open (jsonPath, action) as file:
             json.dump(dictionary, file, sort_keys=True, indent=4, separators=(',',':'))
 
-    def getHastagInfo (self):
+    def getListAttributes (self, path):
         """
             Get all hashtags used in a photo
 
             -> profile: username of the person uploading the photo
         """
-        pathToHashtag = ".//*[local-name()='a' and @class = ' xil3i']"
-        hashtagList = [element.text for element in self.web_driver.find_elements_by_xpath(pathToHashtag)]
+        attributeList = [element.text for element in self.web_driver.find_elements_by_xpath(path)]
         
-        return hashtagList
+        return attributeList
 
 
