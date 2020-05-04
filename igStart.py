@@ -8,6 +8,7 @@
 import os
 #Library to control the timings of execution
 from time import sleep
+from datetime import datetime
 #Principal library for web scrapping
 from selenium import webdriver
 from selenium.webdriver.common import keys
@@ -48,6 +49,7 @@ class igStart():
         #click accept
         self.exceptionHandler("/html/body/div[4]/div/div/div[3]/button[2]")
         sleep(3)
+        self.timeOfRun = datetime.utcnow().strftime('%m/%d/%Y %H:%M:%S %Z') 
         ##We are in
         
     def exceptionHandler (self,xpath):

@@ -65,3 +65,16 @@ class jsonConstructor (igStart):
         jsonPath = jsonPath + ".json"
         with open (jsonPath, action) as file:
             json.dump(dictionary, file, sort_keys=True, indent=4, separators=(',',':'))
+
+    def getHastagInfo (self):
+        """
+            Get all hashtags used in a photo
+
+            -> profile: username of the person uploading the photo
+        """
+        pathToHashtag = ".//*[local-name()='a' and @class = ' xil3i']"
+        hashtagList = [element.text for element in self.web_driver.find_elements_by_xpath(pathToHashtag)]
+        
+        return hashtagList
+
+

@@ -61,7 +61,10 @@ class igIteraction(jsonConstructor):
         #self.dicInit()
         self.openAccount()
         self.antiBan = igAntiban()
+        ##JSON for current run##
         self.hashtagData = {}
+        ##Permanent JSON##
+        self.photoData = {self.username : self.timeOfRun}
         for i in range (5):
             #logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
@@ -79,7 +82,7 @@ class igIteraction(jsonConstructor):
         self.maxComm = self.comCount
         ##Search the Hashtag
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtagGlobal)
-        sleep()
+        sleep(2)
         self.exceptionHandler("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]")
         sleep(1)
         self.iteratePhotos("top",hashtagGlobal)
@@ -124,9 +127,11 @@ class igIteraction(jsonConstructor):
                     photoLikes = self.append(self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text"), "Likes",photoInfo)
                     photoInfoInsta = self.append(self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt"), "Info",photoInfo)
                     photoLink = self.append(self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src"), "Link",photoInfo)
+                    photoHashtags = self.getHastagInfo()
                     
+                    photoHashtags = self.append(photoHashtags, "Hashtags", photoInfo)
                     
-                    self.hashtagData[hashtagGlobal].update({photoNumber:photoInfo})
+                    self.hashtagData[hashtagGlobal].update({photoNumber : photoInfo})
                     self.writeInfo("photoInfo","w",self.hashtagData)
 
                     self.comCount = self.comCount - 1
