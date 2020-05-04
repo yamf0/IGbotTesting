@@ -22,6 +22,7 @@ import math
 import logging
 from logging import StreamHandler
 from igJSON import jsonConstructor
+from igAntiban import igAntiban
 
 #Lists of hashstags & comments.
 poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
@@ -59,6 +60,7 @@ class igIteraction(jsonConstructor):
         self.pw = pw
         #self.dicInit()
         self.openAccount()
+        self.antiBan = igAntiban()
         self.hashtagData = {}
         for i in range (5):
             #logger.info("Hashtag number: {} ".format(i))
@@ -77,7 +79,7 @@ class igIteraction(jsonConstructor):
         self.maxComm = self.comCount
         ##Search the Hashtag
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtagGlobal)
-        sleep(1)
+        sleep()
         self.exceptionHandler("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]")
         sleep(1)
         self.iteratePhotos("top",hashtagGlobal)
