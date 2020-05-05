@@ -5,6 +5,7 @@
     Copyright
 '''
 from igStart import igStart
+from igFollowers import igFollowers
 
 import os
 #Library to control the timings of execution
@@ -64,10 +65,11 @@ class igIteraction(jsonConstructor):
         ##JSON for current run##
         self.hashtagData = {}
         ##Permanent JSON##
-        self.photoData = {self.username : self.timeOfRun}
+        self.photoData = {self.username : {}}
         for i in range (5):
             #logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
+            self.writeInfo("photoInfoHistory", "a", self.photoData)
         self.web_driver.quit()
     
     def iterateHastag(self,hashtagGlobal):
@@ -122,19 +124,22 @@ class igIteraction(jsonConstructor):
                 if (choice[0]):
                     ##Get info Photos##
                     photoInfo = {}
+                    photoData = {}
                     photoNumber = self.maxComm - self.comCount 
-                    photoProfile =self.append(self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text"), "Profile",photoInfo)
-                    photoLikes = self.append(self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text"), "Likes",photoInfo)
-                    photoInfoInsta = self.append(self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt"), "Info",photoInfo)
-                    photoLink = self.append(self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src"), "Link",photoInfo)
+                    photoProfile = self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
+                    photoLikes = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text")
+                    photoInfoInsta = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt")
+                    photoLink = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
+
                     photoHashtags = self.getListAttributes("//*[local-name()='a' and @class = ' xil3i']")
                     
-                    
                     ##Put info into Server JSON##
-                    self.append([{"Profile": photoProfile},{"Likes": photoLikes},{"hashtag": photoHashtags}],self.timeOfRun, self.photoData)
+                    self.append(({"Profile": photoProfile,"Likes": photoLikes,"hashtag": photoHashtags}), photoNumber, photoData)
+                    self.append(photoData, self.timeOfRun, self.photoData)
 
                     ##Put info into Local JSON##
-                    self.append({photoNumber : photoInfo},hashtagGlobal, self.hashtagData)
+                    self.append(({"Profile": photoProfile,"Likes": photoLikes,"InfoInsta": photoInfoInsta,"Link": photoLink}), photoNumber, photoInfo)
+                    self.append(photoInfo,hashtagGlobal, self.hashtagData)
                     self.writeInfo("photoInfo","w",self.hashtagData)
 
                     self.comCount = self.comCount - 1
