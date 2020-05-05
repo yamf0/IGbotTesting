@@ -127,10 +127,13 @@ class igIteraction(jsonConstructor):
                     photoLikes = self.append(self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text"), "Likes",photoInfo)
                     photoInfoInsta = self.append(self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt"), "Info",photoInfo)
                     photoLink = self.append(self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src"), "Link",photoInfo)
-                    photoHashtags = self.getHastagInfo("//*[local-name()='a' and @class = ' xil3i']")
+                    photoHashtags = self.getListAttributes("//*[local-name()='a' and @class = ' xil3i']")
                     
-                    photoHashtags = self.append(photoHashtags, "Hashtags", photoInfo)
                     
+                    ##Put info into Server JSON##
+                    self.append([{"Profile": photoProfile},{"Likes": photoLikes},{"hashtag": photoHashtags}],self.timeOfRun, self.photoData)
+
+                    ##Put info into Local JSON##
                     self.append({photoNumber : photoInfo},hashtagGlobal, self.hashtagData)
                     self.writeInfo("photoInfo","w",self.hashtagData)
 
