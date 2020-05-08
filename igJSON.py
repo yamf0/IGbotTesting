@@ -24,6 +24,7 @@ class jsonConstructor (igStart):
 
     def __init__(self,web_driver):
         self.web_driver = web_driver
+        self.antiBan = igAntiban()
 
     def getAttributes(self, path, attribute):
         """
