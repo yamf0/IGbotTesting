@@ -44,7 +44,7 @@ comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great 
 
 
 
-class igIteraction(jsonConstructor):
+class igInteraction(jsonConstructor):
     """
         Class that starts the interaction through Likes & Comments
     """
@@ -64,8 +64,14 @@ class igIteraction(jsonConstructor):
         self.antiBan = igAntiban()
         ##JSON for current run##
         self.hashtagData = {}
-        ##Permanent JSON##
+        ##Permanent JSON for Data Science##
         self.photoData = {self.username : {}}
+        
+        ##Code to check followers
+        
+        #self.followers = igFollowers(self)
+        #self.followers.profile()
+
         for i in range (5):
             #logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
@@ -151,13 +157,11 @@ class igIteraction(jsonConstructor):
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.usedComment)
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
                     sleep(3)
-                    #close photo
-                    #self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
-                    """
-                        if not (self.CheckComment(real_path)):
-                        self.Scroll()
+                    ##close photo
+                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                    if not (self.checkComment(realPath)):
+                        self.antiBan.histories()
                         return 
-                    """
                     if (self.comCount==0):
                         self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                         return                
@@ -208,21 +212,33 @@ class igIteraction(jsonConstructor):
         else:
             return False
 
+    def checkComment(self,realPath):
+        #Opening photo again
+        self.web_driver.find_element_by_xpath(realPath).click()
+        sleep(2)
+        try:
+            self.web_driver.find_element_by_xpath("//*[local-name()='div']/*[local-name()='article']//*[contains(text(),\"{}\")]".format(self.usedComment))
+            #logger.info("Comment was succesfully made")
+            return True
+        except:
+            #logger.warning("Unable to find Comment")
+            return False
+
 def main ():
     #Little GUI
     var = input("Running Mexican(1) // test code in Mexico(2) // test code in Germany (3) // Any other number for another account ")
     if(var == '1'):
         var_1 = input("Running Mexican(1) or Mexicanless(2)?")
         if (var_1 == '1'):
-            Bot = igIteraction('mexicansombrero','YaelHugoPato')
+            Bot = igInteraction('mexicansombrero','YaelHugoPato')
         elif (var_1 == '2'): 
-            Bot = igIteraction('mexicansombreroless','mannheimzittau')
+            Bot = igInteraction('mexicansombreroless','mannheimzittau')
         else:
             print("Input error")
     elif(var == '2'):
-        Bot = igIteraction('photoandtravel2020','mannheimzittau')
+        Bot = igInteraction('photoandtravel2020','mannheimzittau')
     elif(var == '3'):
-        Bot = igIteraction('travelandphoto2020','mannheimzittau')  
+        Bot = igInteraction('travelandphoto2020','mannheimzittau')  
     else: 
         account = input("Please give the account username")
         password = input("Please give the password")
@@ -230,7 +246,7 @@ def main ():
         print("You entered: " + password)
         var_2 = input("Is the data true(1)? Any other number for no.")
         if(var_2 == '1'):
-            Bot = igIteraction(account,password)
+            Bot = igInteraction(account,password)
         else:
             print("Input error")
 
