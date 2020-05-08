@@ -1,5 +1,5 @@
 '''
-    Developers: Yael Abelardo Martínez & Hugo Armando Zepeda Ruiz
+    Developers: Yael Abelardo Martínez, Oscar Herrera & Hugo Armando Zepeda Ruiz
     Created: 03,2020
     Purpose: Automation of interaction in Instagram from Mexican Sombrero & -less, Testing
     Copyright
