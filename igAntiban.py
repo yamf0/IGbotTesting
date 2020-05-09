@@ -48,4 +48,4 @@ class igAntiban(igStart):
             
             -> time : random int 1-5 seconds
         """
-        return random.choice(range(1,6))
+        return sleep(random.choice(range(1,6)))

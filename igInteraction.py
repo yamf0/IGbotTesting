@@ -65,8 +65,13 @@ class igInteraction(jsonConstructor):
         ##JSON for current run##
         self.hashtagData = {}
         ##Permanent JSON for Data Science##
-        self.photoData = {self.username : {}}
-        
+        ##return Dict for username running##
+        if (os.path.isfile("photoInfoHistory.json")):
+            self.permaData = self.loadInfo("photoInfoHistory.json")
+        else:
+            self.permaData = {self.username : {}}
+        print(self.permaData)
+        self.photoData = {}
         ##Code to check followers
         
         #self.followers = igFollowers(self)
@@ -75,7 +80,7 @@ class igInteraction(jsonConstructor):
         for i in range (5):
             #logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
-            self.writeInfo("photoInfoHistory", "a", self.photoData)
+            self.writeInfo("photoInfoHistory", "w", self.permaData)
         self.web_driver.quit()
     
     def iterateHastag(self,hashtagGlobal):
@@ -86,7 +91,7 @@ class igInteraction(jsonConstructor):
                 hashtagGlobal: hashtag used in iteration
         """
         self.hashtagData.update({hashtagGlobal:{}})
-        self.comCount = 14
+        self.comCount = 2
         self.maxComm = self.comCount
         ##Search the Hashtag
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtagGlobal)
@@ -141,7 +146,9 @@ class igInteraction(jsonConstructor):
                     
                     ##Put info into Server JSON##
                     self.append(({"Profile": photoProfile,"Likes": photoLikes,"hashtag": photoHashtags}), photoNumber, photoData)
-                    self.append(photoData, self.timeOfRun, self.photoData)
+                    self.append(photoData, hashtagGlobal, self.photoData)
+                    newDict = self.getDict(self.username,self.permaData)
+                    self.append(self.photoData, self.timeOfRun, newDict)
 
                     ##Put info into Local JSON##
                     self.append(({"Profile": photoProfile,"Likes": photoLikes,"InfoInsta": photoInfoInsta,"Link": photoLink}), photoNumber, photoInfo)

@@ -48,11 +48,28 @@ class jsonConstructor (igStart):
 
             ->dictAppend:  in which dictionary will the data be saved
         """
-        if (key in dictAppend.keys()):
+        if (key in dictAppend):
             dictAppend[key].update(data)
         else:
             dictAppend.update({key : data})
         return dictAppend
+
+    def getDict (self, key, dictionary):
+        """
+            Will retrun a new dictionary of the key within a dictionary
+            
+            ->key: key to be searched
+
+            ->dictionary: dictionary to search within
+
+        """
+        if (key in dictionary):
+            newDict = dictionary[key]
+            return newDict
+        for k, val in dictionary.items():
+            if (isinstance(val, dict) and val == key):
+                return self.getDict(key, dictionary)
+
 
     def writeInfo(self, jsonPath, action, dictionary):
         """
@@ -65,6 +82,17 @@ class jsonConstructor (igStart):
         jsonPath = jsonPath + ".json"
         with open (jsonPath, action) as file:
             json.dump(dictionary, file, sort_keys=True, indent=4, separators=(',',':'))
+    
+    def loadInfo (self, jsonPath):
+        """
+            Open a JSON file to import dict
+
+            return dict
+        """
+        with open(jsonPath, "r") as file:
+            dictionary = json.load(file)
+            print(dictionary)
+            return dictionary
 
     def getListAttributes (self, path):
         """
