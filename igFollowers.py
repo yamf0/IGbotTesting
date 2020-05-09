@@ -1,5 +1,5 @@
 '''
-    Developers: Yael Abelardo Martínez & Hugo Armando Zepeda Ruiz
+    Developers: Yael Abelardo Martínez, Oscar Herrera & Hugo Armando Zepeda Ruiz
     Created: 03,2020
     Purpose: Automation of interaction in Instagram from Mexican Sombrero & -less, Testing
     Copyright
@@ -31,18 +31,18 @@ class igFollowers(igStart):
 
     def profile(self):
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[3]/div/div[5]/a").click()
-        sleep(2)
+        self.antiBan.randomSleep()
         self.follow()
 
     def follow(self):
         #Check followers
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/ul/li[2]/a/span").click()
-        sleep(2)
+        self.antiBan.randomSleep()
 
         last_ht, ht = 0, 1
         while last_ht != ht:
             last_ht = ht
-            sleep(1)
+            self.antiBan.randomSleep()
             ht = self.web_driver.execute_script("""
             arguments[0].scrollTo(0, arguments[0].scrollHeight);
             return arguments[0].scrollHeight;
@@ -54,18 +54,18 @@ class igFollowers(igStart):
         self.name = self.follower.getListAttributes(path)
 
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div[1]/div/div[2]/button").click()
-        sleep(1)
+        self.antiBan.randomSleep()
         self.unfollow()
         
     def unfollow(self):
         #Check unfollowers
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/ul/li[3]/a/span").click()
-        sleep(2) 
+        self.antiBan.randomSleep()
 
         last_ht, ht = 0, 1
         while last_ht != ht:
             last_ht = ht
-            sleep(1)
+            self.antiBan.randomSleep()
             ht = self.web_driver.execute_script("""
             arguments[0].scrollTo(0, arguments[0].scrollHeight);
             return arguments[0].scrollHeight;
@@ -77,7 +77,7 @@ class igFollowers(igStart):
         self.followerDict()
 
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div[1]/div/div[2]/button").click()
-        sleep(2)
+        self.antiBan.randomSleep()
 
     def followerDict(self):
         ##Second Permanent JSON for Followers##

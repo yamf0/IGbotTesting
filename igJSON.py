@@ -1,3 +1,9 @@
+'''
+    Developers: Yael Abelardo Martínez, Oscar Herrera & Hugo Armando Zepeda Ruiz
+    Created: 03,2020
+    Purpose: Automation of interaction in Instagram from Mexican Sombrero & -less, Testing
+    Copyright
+'''
 from igStart import igStart
 import json
 import os
@@ -18,6 +24,7 @@ class jsonConstructor (igStart):
 
     def __init__(self,web_driver):
         self.web_driver = web_driver
+        self.antiBan = igAntiban()
 
     def getAttributes(self, path, attribute):
         """
@@ -91,7 +98,6 @@ class jsonConstructor (igStart):
         """
         with open(jsonPath, "r") as file:
             dictionary = json.load(file)
-            print(dictionary)
             return dictionary
 
     def getListAttributes (self, path):

@@ -1,11 +1,14 @@
 '''
-    Developers: Yael Abelardo Martínez & Hugo Armando Zepeda Ruiz
+    Developers: Yael Abelardo Martínez, Oscar Herrera & Hugo Armando Zepeda Ruiz
     Created: 03,2020
     Purpose: Automation of interaction in Instagram from Mexican Sombrero & -less, Testing
     Copyright
 '''
 from igStart import igStart
 from igFollowers import igFollowers
+from logging import StreamHandler
+from igJSON import jsonConstructor
+from igAntiban import igAntiban
 
 import os
 #Library to control the timings of execution
@@ -21,9 +24,7 @@ import argparse
 import math
 #Library to print personalize message. Allows more control in message control 
 import logging
-from logging import StreamHandler
-from igJSON import jsonConstructor
-from igAntiban import igAntiban
+
 
 #Lists of hashstags & comments.
 poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
@@ -68,6 +69,8 @@ class igInteraction(jsonConstructor):
         ##return Dict for username running##
         if (os.path.isfile("photoInfoHistory.json")):
             self.permaData = self.loadInfo("photoInfoHistory.json")
+            if (self.username not in self.permaData): 
+                self.append({}, self.username, self.permaData)
         else:
             self.permaData = {self.username : {}}
         print(self.permaData)
@@ -91,13 +94,13 @@ class igInteraction(jsonConstructor):
                 hashtagGlobal: hashtag used in iteration
         """
         self.hashtagData.update({hashtagGlobal:{}})
-        self.comCount = 2
+        self.comCount = 10
         self.maxComm = self.comCount
         ##Search the Hashtag
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtagGlobal)
-        sleep(2)
+        self.antiBan.randomSleep()
         self.exceptionHandler("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]")
-        sleep(1)
+        self.antiBan.randomSleep()
         self.iteratePhotos("top",hashtagGlobal)
     
     def iteratePhotos(self, section, hashtagGlobal):
@@ -122,11 +125,11 @@ class igInteraction(jsonConstructor):
                 realPath=pathInit+pathI+pathJ+pathEnd
                 #HERE WE TRY THE EXCEPTION HANDLER
                 self.exceptionHandler(realPath)
-                sleep(5)
+                self.antiBan.randomSleep()
                 #Search previous Like
                 if (self.havingLike()):
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
-                    sleep(1)
+                    self.antiBan.randomSleep()
                     continue
                 #Do the necessary math to see if making the comment
                 choice = random.choices([True,False],[((math.e)**((self.comCount/self.maxComm)-1)),((math.e)**(-self.comCount/self.maxComm))],k=1)
@@ -158,12 +161,12 @@ class igInteraction(jsonConstructor):
                     self.comCount = self.comCount - 1
                     #Click Like
                     self.exceptionHandler("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button")
-                    sleep(2)
+                    self.antiBan.randomSleep()
                     ##Click comment
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[2]/button").click()
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.usedComment)
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
-                    sleep(3)
+                    self.antiBan.randomSleep()
                     ##close photo
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                     if not (self.checkComment(realPath)):
@@ -174,7 +177,7 @@ class igInteraction(jsonConstructor):
                         return                
                 #This is the close button
                 self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
-                sleep(2)
+                self.antiBan.randomSleep()
         if (section == "recent"): return
         #Re-run Hashtag for recent photos
         self.iteratePhotos("recent",hashtagGlobal)
@@ -208,7 +211,7 @@ class igInteraction(jsonConstructor):
                 break
             except Exception as ex:
                 #logger.warning("Could not Find the Like Button")
-                sleep (3)
+                self.antiBan.randomSleep()
                 i+= 1
                 if (i == 5) :
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
@@ -222,7 +225,7 @@ class igInteraction(jsonConstructor):
     def checkComment(self,realPath):
         #Opening photo again
         self.web_driver.find_element_by_xpath(realPath).click()
-        sleep(2)
+        self.antiBan.randomSleep()
         try:
             self.web_driver.find_element_by_xpath("//*[local-name()='div']/*[local-name()='article']//*[contains(text(),\"{}\")]".format(self.usedComment))
             #logger.info("Comment was succesfully made")

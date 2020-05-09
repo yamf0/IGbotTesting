@@ -1,5 +1,5 @@
 '''
-    Developers: Yael Abelardo Martínez & Hugo Armando Zepeda Ruiz
+    Developers: Yael Abelardo Martínez, Oscar Herrera & Hugo Armando Zepeda Ruiz
     Created: 03,2020
     Purpose: Automation of interaction in Instagram from Mexican Sombrero & -less, Testing
     Copyright
@@ -48,4 +48,4 @@ class igAntiban(igStart):
             
             -> time : random int 1-5 seconds
         """
-        return sleep(random.choice(range(1,6)))
+        return sleep(random.choice(range(2,6)))
