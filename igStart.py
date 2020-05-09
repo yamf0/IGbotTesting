@@ -37,7 +37,7 @@ class igStart():
             start Chrome & IG
         """
         
-        self.driveObj.downloadFile("photoInfoHistory.json")
+        # self.driveObj.downloadFile("photoInfoHistory.json")
         #Open chrome
         self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
         self.web_driver.get("https://instagram.com")
