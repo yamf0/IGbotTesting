@@ -4,6 +4,8 @@
     Purpose: Automation of interaction in Instagram from Mexican Sombrero & -less, Testing
     Copyright
 '''
+from driveFile import driveFile
+
 import os
 #Library to control the timings of execution
 from time import sleep
@@ -34,6 +36,8 @@ class igStart():
         """
             start Chrome & IG
         """
+        
+        self.driveObj.downloadFile("photoInfoHistory.json")
         #Open chrome
         self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
         self.web_driver.get("https://instagram.com")
@@ -64,4 +68,4 @@ class igStart():
                 break
             except Exception as ex:
                 sleep(3)
-                continue
+                continue        

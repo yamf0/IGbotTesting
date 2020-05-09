@@ -9,6 +9,7 @@ from igFollowers import igFollowers
 from logging import StreamHandler
 from igJSON import jsonConstructor
 from igAntiban import igAntiban
+from driveFile import driveFile
 
 import os
 #Library to control the timings of execution
@@ -61,6 +62,7 @@ class igInteraction(jsonConstructor):
         self.username = username
         self.pw = pw
         #self.dicInit()
+        self.driveObj = driveFile()
         self.openAccount()
         self.antiBan = igAntiban()
         ##JSON for current run##
@@ -73,7 +75,6 @@ class igInteraction(jsonConstructor):
                 self.append({}, self.username, self.permaData)
         else:
             self.permaData = {self.username : {}}
-        print(self.permaData)
         self.photoData = {}
         ##Code to check followers
         
@@ -84,7 +85,9 @@ class igInteraction(jsonConstructor):
             #logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
             self.writeInfo("photoInfoHistory", "w", self.permaData)
+        self.driveObj.uploadFile("photoInfoHistory.json")
         self.web_driver.quit()
+        
     
     def iterateHastag(self,hashtagGlobal):
         """
