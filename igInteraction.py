@@ -176,7 +176,7 @@ class igInteraction(jsonConstructor):
                     ##close photo
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                     if not (self.checkComment(realPath)):
-                        self.antiBan.histories()
+                        self.antiBan.histories(self.web_driver)
                         return 
                     if (self.comCount==0):
                         self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
