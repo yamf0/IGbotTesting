@@ -242,18 +242,10 @@ class igInteraction(jsonConstructor):
 
 def main ():
     #Little GUI
-    var = input("Running Mexican(1) // test code in Mexico(2) // test code in Germany (3) // Any other number for another account ")
+    var = input("Test code in Mexico(1) // Test code in Germany (2) // Any other number for another account ")
     if(var == '1'):
-        var_1 = input("Running Mexican(1) or Mexicanless(2)?")
-        if (var_1 == '1'):
-            Bot = igInteraction('mexicansombrero','YaelHugoPato')
-        elif (var_1 == '2'): 
-            Bot = igInteraction('mexicansombreroless','mannheimzittau')
-        else:
-            print("Input error")
-    elif(var == '2'):
         Bot = igInteraction('photoandtravel2020','mannheimzittau')
-    elif(var == '3'):
+    elif(var == '2'):
         Bot = igInteraction('travelandphoto2020','mannheimzittau')  
     else: 
         account = input("Please give the account username")
