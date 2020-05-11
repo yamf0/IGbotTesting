@@ -37,7 +37,9 @@ class igStart():
             start Chrome & IG
         """
         
-        # self.driveObj.downloadFile("photoInfoHistory.json")
+        exitCode = self.driveObj.downloadFile("photoInfoHistory.json")
+        if (exitCode == 0): exit()
+
         #Open chrome
         self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
         self.web_driver.get("https://instagram.com")
@@ -50,12 +52,12 @@ class igStart():
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
         sleep(3)
         #click accept
-        self.exceptionHandler("/html/body/div[4]/div/div/div[3]/button[2]")
+        self.exceptionHandler("/html/body/div[4]/div/div/div[3]/button[2]",3)
         sleep(3)
         self.timeOfRun = datetime.utcnow().strftime('%m/%d/%Y %H:%M:%S %Z') 
         ##We are in
         
-    def exceptionHandler (self,xpath):
+    def exceptionHandler (self,xpath, trys= None):
         """
             Method will try to click Xpath, if not find will wait untill it is found (Solves Bad internet Issue)
 
@@ -64,8 +66,11 @@ class igStart():
         """
         while (True):
             try:
+                if(trys == 0 and not None): break
                 self.web_driver.find_element_by_xpath(xpath).click()
                 break
             except Exception as ex:
+                print(ex)
+                if (trys): trys -= 1
                 sleep(3)
                 continue        

@@ -39,16 +39,9 @@ class igFollowers(igStart):
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/ul/li[2]/a/span").click()
         self.antiBan.randomSleep()
 
-        last_ht, ht = 0, 1
-        while last_ht != ht:
-            last_ht = ht
-            self.antiBan.randomSleep()
-            ht = self.web_driver.execute_script("""
-            arguments[0].scrollTo(0, arguments[0].scrollHeight);
-            return arguments[0].scrollHeight;
-            """, self.web_driver.find_element_by_xpath("//*[local-name()='div' and @role='dialog']/*[local-name()='div' and @class='isgrP']"))
-        
         self.follower = jsonConstructor(self.web_driver)
+        ##Scroll though the list of followers
+        self.follower.scrollList("//*[local-name()='div' and @role='dialog']/*[local-name()='div' and @class='isgrP']")
 
         path = "//*[local-name()='a' and @class='FPmhX notranslate  _0imsa ']"
         self.name = self.follower.getListAttributes(path)
@@ -62,15 +55,9 @@ class igFollowers(igStart):
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/ul/li[3]/a/span").click()
         self.antiBan.randomSleep()
 
-        last_ht, ht = 0, 1
-        while last_ht != ht:
-            last_ht = ht
-            self.antiBan.randomSleep()
-            ht = self.web_driver.execute_script("""
-            arguments[0].scrollTo(0, arguments[0].scrollHeight);
-            return arguments[0].scrollHeight;
-            """, self.web_driver.find_element_by_xpath("//*[local-name()='div' and @role='dialog']/*[local-name()='div' and @class='isgrP']"))
-        
+        ##Scroll through list
+        self.follower.scrollList("//*[local-name()='div' and @role='dialog']/*[local-name()='div' and @class='isgrP']")
+
         path2 = "//*[local-name()='a' and @class='FPmhX notranslate  _0imsa ']"
         self.name2 = self.follower.getListAttributes(path2)
 

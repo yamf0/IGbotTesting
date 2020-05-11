@@ -1,7 +1,7 @@
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 from time import sleep
-
+import os
 
 
 class driveFile():
@@ -37,11 +37,26 @@ class driveFile():
 
             variables 
             ->fileName:  name of file to be downloaded
+
+            Return:
+            ->1 :  File was downloaded
+            ->0 : File couldnt be found
         """
-        
+        try:
+            os.remove(fileName)
+        except:
+            print("File does not existed previously")
+
         for file1 in self.file_list:
             if (file1['title'] == fileName):
                 file1.GetContentFile(str(fileName))
+        if (os.path.exists(fileName)):
+            ##Code Error 1 means success##
+            return 1
+        else: 
+            print ("File was not downloaded, please re run code")
+            sleep(10)
+            return 0
 
     def uploadFile (self, fileName):
         """
@@ -49,6 +64,10 @@ class driveFile():
 
             Variables
             ->fileName: file to upload
+
+            Return:
+            ->1 :  File was downloaded
+            ->0 : File couldnt be found
         """
         for file1 in self.file_list:
             if (file1["title"] == fileName):
@@ -57,8 +76,13 @@ class driveFile():
         print("Uploading Drive")
         file = self.drive.CreateFile()
         file.SetContentFile(fileName)
-        file.Upload()  
-        sleep(2)
+        try:
+            file.Upload()  
+        ##Catch exception of not upload possible##
+        except drive.ApiRequestError as ex:
+            print("File was unable to upload with : {}".format(ex))
+            return 0
+        return 1
 
 
 

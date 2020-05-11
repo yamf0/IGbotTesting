@@ -15,11 +15,8 @@ from selenium import webdriver
 from selenium.webdriver.common import keys
 from selenium.webdriver.remote.command import Command
 from selenium.common.exceptions import NoSuchElementException
-path_driver = os.path.dirname(os.path.realpath(__file__))
 
-#Find PATH to current Directory (to find the driver)
-print (path_driver)
-
+from igAntiban import igAntiban
 
 class igProfile(jsonConstructor):
     def __init__(self,obj):
@@ -27,23 +24,29 @@ class igProfile(jsonConstructor):
         Will open the profile and click on the first picture
 
         """
+        self.antiBan = igAntiban()
         #Entra al perfil, analiza el numero de post que tiene y abre la primera foto
         self.web_driver = obj.web_driver
         self.timeOfRun = obj.timeOfRun
 
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[3]/div/div[5]/a/img").click()
+        ##CLick go to profile
+        self.web_driver.find_element_by_xpath("//*[local-name()='nav' and contains(@class, 'NXc7H')]//a[img]").click()
         sleep(2)
         self.post = self.web_driver.find_element_by_class_name('g47SY').text
         self.num = int(self.post)
         self.maxNumPhotos = self.num
         sleep (2)
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/div/div[2]/article/div/div/div[1]/div[1]/a/div").click()
+
+        ##Click first image
+        self.web_driver.find_element_by_xpath("(//div[@class= 'eLAPa'])[1]").click()
         sleep(2)
         #Inicia funcion
         self.hashtagInfo = {}
+        self.likesNames = {}
         self.iterarPerfil()
         #Cierra la ultima foto
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+        print(self.likesNames)
    
 
 
@@ -66,7 +69,12 @@ class igProfile(jsonConstructor):
         f = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/div[2]/a/time","title")
         h = self.getListAttributes("//a[@class=' xil3i']")
         t = self.timeOfRun
-        self.append(({"Likes": l,"Fecha": f,"Hastags": h,}), self.maxNumPhotos-self.num, self.hashtagInfo)
+
+        ##get list of people who liked the photo
+        profiles = self.getLikesNames()
+
+        self.append(profiles, self.maxNumPhotos-self.num, self.likesNames)
+        self.append(({"Likes": l,"Fecha": f,"Hastags": h}), self.maxNumPhotos-self.num, self.hashtagInfo)
         self.writeInfo("PerfilInfo","w",self.hashtagInfo)
         # self.getDict(t,self.hashtagInfo)
         self.exceptionHandler(pathperfil)
@@ -76,5 +84,23 @@ class igProfile(jsonConstructor):
 
         if (self.num == 1): return
         self.iterarPerfil()
+
+    def getLikesNames (self):
+        """
+            Gets the Profiles of the Likes obtained from each photo
+        """
+        likesButtonPath = "//*[local-name()='div' and @class='Nm9Fw']/*[local-name()='button']"
+        self.exceptionHandler(likesButtonPath)
+
+        ##Scroll through names
+        self.scrollList("//*[local-name()='div' and @class= 'pbNvD  fPMEg   ' and @role='dialog']/div[contains(@class,'Igw0E')]/div")
+
+        
+        profiles = self.getListAttributes("//*[local-name()='div' and contains(@class , 'HVWg4')]/div[2]")
+
+        sleep(1)
+        ##CLOSE LIST
+        self.web_driver.find_element_by_xpath("//div[@class = 'WaOAr']/button[ @class= 'wpO6b ']").click()
+        return profiles
 
 

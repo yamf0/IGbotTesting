@@ -62,8 +62,8 @@ class igInteraction(jsonConstructor):
         """
         self.username = username
         self.pw = pw
-        #self.dicInit()
-        # self.driveObj = driveFile()
+        
+        self.driveObj = driveFile()
         self.openAccount()
         self.antiBan = igAntiban()
         ##JSON for current run##
@@ -81,12 +81,14 @@ class igInteraction(jsonConstructor):
         
         #self.followers = igFollowers(self)
         #self.followers.profile()
-        # self.Profile = igProfile(self)
+
+        ##Check/Iterate in Profile photos##
+        self.Profile = igProfile(self)
         for i in range (5):
             #logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
             self.writeInfo("photoInfoHistory", "w", self.permaData)
-        # self.driveObj.uploadFile("photoInfoHistory.json")
+        self.driveObj.uploadFile("photoInfoHistory.json")
         self.web_driver.quit()
         
     

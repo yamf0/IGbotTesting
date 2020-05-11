@@ -5,6 +5,9 @@
     Copyright
 '''
 from igStart import igStart
+from igAntiban import igAntiban
+
+from time import sleep
 import json
 import os
 
@@ -110,4 +113,19 @@ class jsonConstructor (igStart):
         
         return attributeList
 
+    def scrollList(self, path):
+        """
+            Scroll a List until the end
 
+            varibales:
+            -> path: Xpath to the list
+        """
+        last_ht, ht = 0, 1
+        while last_ht != ht:
+            last_ht = ht
+            sleep(2)
+            ht = self.web_driver.execute_script("""
+            arguments[0].scrollTo(0, arguments[0].scrollHeight);
+            return arguments[0].scrollHeight;
+            """, self.web_driver.find_element_by_xpath(path))
+            print("SCROLLING")
