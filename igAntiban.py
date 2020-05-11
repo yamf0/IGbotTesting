@@ -24,11 +24,12 @@ class igAntiban(igStart):
     """
     def __init__(self):
         pass
-    
-    def histories(self):
+
+    def histories(self,web_driver):
         """
             Go to main page and scroll through ig Histories
         """
+        self.web_driver = web_driver
         #Close the Photo
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
         sleep(2)
