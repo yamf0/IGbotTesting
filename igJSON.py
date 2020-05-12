@@ -129,3 +129,4 @@ class jsonConstructor (igStart):
             return arguments[0].scrollHeight;
             """, self.web_driver.find_element_by_xpath(path))
             print("SCROLLING")
+

@@ -46,8 +46,10 @@ class igProfile(jsonConstructor):
         self.iterarPerfil()
         #Cierra la ultima foto
         self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
-        print(self.likesNames)
-   
+        profileCount = self.compareLikesProfiles(self.likesNames)
+
+        self.writeInfo("likesProfiles","w",profileCount)
+  
 
 
 
@@ -58,32 +60,48 @@ class igProfile(jsonConstructor):
             Will do the iteration through perfil photos and save likes, hashtags and date.
 
         """
+        for i in range(self.num - 1 ):
+            if(i == 0):
+                pathperfil ="/html/body/div[4]/div[1]/div/div/a"
+            else:
+                pathperfil ="/html/body/div[4]/div[1]/div/div/a[2]"
+            
 
-        if((self.maxNumPhotos-self.num) == 0):
-            pathperfil ="/html/body/div[4]/div[1]/div/div/a"
-        else:
-            pathperfil ="/html/body/div[4]/div[1]/div/div/a[2]"
-        self.num -= 1
-        
-        l = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button", "text")
-        f = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/div[2]/a/time","title")
-        h = self.getListAttributes("//a[@class=' xil3i']")
-        t = self.timeOfRun
+                    ##Check if it is a video##
+            try:
+                self.web_driver.find_element_by_xpath("//div[@class='PyenC']")
+                video = True
+            except:
+                video = False
+            if(video):
+                print("this is a Video")
+                self.exceptionHandler(pathperfil)
+                sleep(1)
+                continue
+            
+            sleep(2)
+            l = self.getAttributes("//div[@class = 'Nm9Fw']/button/span", "text")
+            f = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/div[2]/a/time","datetime")
+            h = self.getListAttributes("//a[@class=' xil3i']")
+            t = self.timeOfRun
 
-        ##get list of people who liked the photo
-        profiles = self.getLikesNames()
+            ##get list of people who liked the photo
+            profiles = self.getLikesNames()
 
-        self.append(profiles, self.maxNumPhotos-self.num, self.likesNames)
-        self.append(({"Likes": l,"Fecha": f,"Hastags": h}), self.maxNumPhotos-self.num, self.hashtagInfo)
-        self.writeInfo("PerfilInfo","w",self.hashtagInfo)
-        # self.getDict(t,self.hashtagInfo)
-        self.exceptionHandler(pathperfil)
-        sleep(2)
+            sleep(1)
+            self.append(({"Likes": l,"Fecha": f,"Hastags": h}), i, self.hashtagInfo)
+            self.writeInfo("PerfilInfo","w",self.hashtagInfo)
+                
+            self.append(profiles, i, self.likesNames)
 
-        
+            
 
-        if (self.num == 1): return
-        self.iterarPerfil()
+            sleep(2)
+            
+            # self.getDict(t,self.hashtagInfo)
+            self.exceptionHandler(pathperfil)
+            
+            
 
     def getLikesNames (self):
         """
@@ -96,7 +114,7 @@ class igProfile(jsonConstructor):
         self.scrollList("//*[local-name()='div' and @class= 'pbNvD  fPMEg   ' and @role='dialog']/div[contains(@class,'Igw0E')]/div")
 
         
-        profiles = self.getListAttributes("//*[local-name()='div' and contains(@class , 'HVWg4')]/div[2]")
+        profiles = self.getListAttributes("//*[local-name()='div' and contains(@class , 'HVWg4')]/div[2]/div//a")
 
         sleep(1)
         ##CLOSE LIST
@@ -104,3 +122,24 @@ class igProfile(jsonConstructor):
         return profiles
 
 
+    def compareLikesProfiles (self, dictionary, key= "num"):
+        """
+            Method that compares the name of diferent lists
+
+            Variable:
+            -> dict = dictionary where lists are stored
+            ->key = under which elements exist
+            return 
+            ->list = single list of not repeating elements
+        """
+        elList= []
+        newDict = {}
+        for i in range(len(dictionary.keys())):
+            nextKey = list(dictionary.keys())[i]
+            elList += self.getDict(nextKey, dictionary)
+
+        profiles = list(set(elList))
+        for i in profiles:
+            self.append(elList.count(i), i, newDict)
+        
+        return newDict
