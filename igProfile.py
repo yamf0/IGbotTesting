@@ -70,6 +70,7 @@ class igProfile(jsonConstructor):
             
 
                     ##Check if it is a video##
+            sleep(2)
             try:
                 self.web_driver.find_element_by_xpath("//div[@class='PyenC']")
                 video = True

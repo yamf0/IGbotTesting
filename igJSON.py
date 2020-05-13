@@ -90,8 +90,8 @@ class jsonConstructor (igStart):
                 ->action: w for overwirte a for append
         """
         jsonPath = jsonPath + ".json"
-        with open (jsonPath, action) as file:
-            json.dump(dictionary, file, sort_keys=True, indent=4, separators=(',',':'))
+        with open (jsonPath, action, encoding='utf8') as file:
+            json.dump(dictionary, file, sort_keys=True, ensure_ascii=False, indent=4, separators=(',',':'))
     
     def loadInfo (self, jsonPath):
         """
