@@ -42,6 +42,7 @@ class igProfile(jsonConstructor):
         sleep(2)
         #Inicia funcion
         self.hashtagInfo = {}
+        self.hashtime ={}
         self.likesNames = {}
         self.iterarPerfil()
         #Cierra la ultima foto
@@ -60,6 +61,7 @@ class igProfile(jsonConstructor):
             Will do the iteration through perfil photos and save likes, hashtags and date.
 
         """
+        # self.hashtime.update({t:{}})
         for i in range(self.num - 1 ):
             if(i == 0):
                 pathperfil ="/html/body/div[4]/div[1]/div/div/a"
@@ -90,7 +92,8 @@ class igProfile(jsonConstructor):
 
             sleep(1)
             self.append(({"Likes": l,"Fecha": f,"Hastags": h}), i, self.hashtagInfo)
-            self.writeInfo("PerfilInfo","w",self.hashtagInfo)
+            self.append(self.hashtagInfo,t,self.hashtime)
+            self.writeInfo("PerfilInfo","w",self.hashtime)
                 
             self.append(profiles, i, self.likesNames)
 
