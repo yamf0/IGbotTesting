@@ -97,7 +97,8 @@ class igProfile(jsonConstructor):
                 
             self.append(profiles, i, self.likesNames)
 
-            
+            #self.writeInfo("Likes","w",self.likesNames)
+
 
             sleep(2)
             

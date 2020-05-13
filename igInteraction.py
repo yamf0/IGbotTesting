@@ -83,7 +83,7 @@ class igInteraction(jsonConstructor):
         #self.followers.profile()
 
         ##Check/Iterate in Profile photos##
-        self.Profile = igProfile(self)
+        #self.Profile = igProfile(self)
         for i in range (5):
             #logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
@@ -233,7 +233,7 @@ class igInteraction(jsonConstructor):
         self.web_driver.find_element_by_xpath(realPath).click()
         self.antiBan.randomSleep()
         try:
-            self.web_driver.find_element_by_xpath("//*[local-name()='div']/*[local-name()='article']//*[contains(text(),\"{}\")]".format(self.usedComment))
+            self.web_driver.find_element_by_xpath("//div/article//h3[//a[contains(text(),\"{}\")]]/following-sibling::span".format(self.username))
             #logger.info("Comment was succesfully made")
             return True
         except:
