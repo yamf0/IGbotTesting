@@ -62,21 +62,21 @@ class igInteraction(jsonConstructor):
         """
         self.username = username
         self.pw = pw
-        
-        self.driveObj = driveFile()
+        self.fileNameRoot = self.username 
+        #self.driveObj = driveFile()
         self.openAccount()
         self.antiBan = igAntiban()
         ##JSON for current run##
         self.hashtagData = {}
         ##Permanent JSON for Data Science##
         ##return Dict for username running##
-        if (os.path.isfile("photoInfoHistory.json")):
-            self.permaData = self.loadInfo("photoInfoHistory.json")
-            if (self.username not in self.permaData): 
-                self.append({}, self.username, self.permaData)
+        if (os.path.isfile(self.fileNameRoot + ".json")):
+            self.permaData = self.loadInfo(self.fileNameRoot + ".json")
+    
         else:
-            self.permaData = {self.username : {}}
+            self.permaData = {}
         self.photoData = {}
+
         ##Code to check followers
         
         #self.followers = igFollowers(self)
@@ -87,8 +87,8 @@ class igInteraction(jsonConstructor):
         for i in range (5):
             #logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
-            self.writeInfo("photoInfoHistory", "w", self.permaData)
-        self.driveObj.uploadFile("photoInfoHistory.json")
+            self.writeInfo(self.fileNameRoot, "w", self.permaData)
+        #self.driveObj.uploadFile(self.fileNameRoot)
         self.web_driver.quit()
         
     
@@ -100,7 +100,7 @@ class igInteraction(jsonConstructor):
                 hashtagGlobal: hashtag used in iteration
         """
         self.hashtagData.update({hashtagGlobal:{}})
-        self.comCount = 10
+        self.comCount = 2
         self.maxComm = self.comCount
         ##Search the Hashtag
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtagGlobal)
@@ -144,7 +144,7 @@ class igInteraction(jsonConstructor):
                 if (choice[0]):
                     ##Get info Photos##
                     photoInfo = {}
-                    photoData = {}
+
                     photoNumber = self.maxComm - self.comCount 
                     photoProfile = self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
                     photoLikes = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text")
@@ -152,12 +152,17 @@ class igInteraction(jsonConstructor):
                     photoLink = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
 
                     photoHashtags = self.getListAttributes("//*[local-name()='a' and @class = ' xil3i']")
+
+                    ##Get the last number photo in dictionary
+                    if(self.timeOfRun in self.permaData.keys()):
+                        lastNumber = list(self.permaData[self.timeOfRun].keys())[-1] + 1
+                    else:
+                        lastNumber = 0
                     
                     ##Put info into Server JSON##
-                    self.append(({"Profile": photoProfile,"Likes": photoLikes,"hashtag": photoHashtags}), photoNumber, photoData)
-                    self.append(photoData, hashtagGlobal, self.photoData)
-                    newDict = self.getDict(self.username,self.permaData)
-                    self.append(self.photoData, self.timeOfRun, newDict)
+                    photoData = {"Profile": photoProfile,"Likes": photoLikes,"hashtag": photoHashtags}
+                    self.append(photoData, (lastNumber) , self.photoData)
+                    self.append(self.photoData, self.timeOfRun, self.permaData)
 
                     ##Put info into Local JSON##
                     self.append(({"Profile": photoProfile,"Likes": photoLikes,"InfoInsta": photoInfoInsta,"Link": photoLink}), photoNumber, photoInfo)

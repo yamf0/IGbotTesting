@@ -46,12 +46,16 @@ class driveFile():
             os.remove(fileName)
         except:
             print("File does not existed previously")
-
+        existsFile = 0
         for file1 in self.file_list:
             if (file1['title'] == fileName):
                 file1.GetContentFile(str(fileName))
+                existsFile = 1
+
         if (os.path.exists(fileName)):
             ##Code Error 1 means success##
+            return 1
+        elif(existsFile == 0):
             return 1
         else: 
             print ("File was not downloaded, please re run code")
