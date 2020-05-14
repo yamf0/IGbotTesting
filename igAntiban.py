@@ -38,7 +38,7 @@ class igAntiban(igStart):
         #logger.info("returned to Main page")
         #self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[1]/a/div/div/img").click()
         sleep(2)
-        self.exceptionHandler("//li[@class='Ckrof']")
+        self.exceptionHandler("//li[@class='Ckrof'][2]")
         #logger.info("start checking histories, expected return at: {} minutes".format(localtime()[4] + 5))
         sleep(300)
         self.exceptionHandler("/html/body/div[1]/section/div/div/section/div[2]/button[3]") 

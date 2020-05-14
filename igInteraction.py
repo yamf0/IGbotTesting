@@ -100,7 +100,7 @@ class igInteraction(jsonConstructor):
                 hashtagGlobal: hashtag used in iteration
         """
         self.hashtagData.update({hashtagGlobal:{}})
-        self.comCount = 2
+        self.comCount = 10
         self.maxComm = self.comCount
         ##Search the Hashtag
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtagGlobal)
