@@ -7,6 +7,7 @@
 from driveFile import driveFile
 
 import os
+import platform
 #Library to control the timings of execution
 from time import sleep
 from datetime import datetime
@@ -37,11 +38,14 @@ class igStart():
             start Chrome & IG
         """
         
-        #exitCode = self.driveObj.downloadFile(self.username + ".json")
-        #if (exitCode == 0): exit()
+        exitCode = self.driveObj.downloadFile("photoInfoHistory.json")
+        if (exitCode == 0): exit()
 
         #Open chrome
-        self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
+        if(platform.system == 'Windows'):
+            self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
+        else:
+            self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver")
         self.web_driver.get("https://instagram.com")
         sleep(2)
         #Input account and pw
