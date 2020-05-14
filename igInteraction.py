@@ -36,7 +36,7 @@ comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great 
     "Wow that pic!", "This place is amazing", "Keep up the great photos", "Amazing",\
     "Perfect!", "Amazing", "That is nice!", "Great",\
     "What a destination", "That is amazing", "Great!!!",\
-    "Wish to be there","Cannot wait to be there","Maybe this is the sombrero next destination","Nice photo",\
+    "Wish to be there","Cannot wait to be there","Nice photo",\
     "Really love this part of the day",\
     "Wish to be there","Cannot wait to be there","Maybe this is the sombrero next destination",\
     "WOW", "This is Perfect", "Congrats for the great Photo", "Simply Beautiful",\
@@ -70,8 +70,8 @@ class igInteraction(jsonConstructor):
         self.hashtagData = {}
         ##Permanent JSON for Data Science##
         ##return Dict for username running##
-        if (os.path.isfile(self.fileNameRoot + ".json")):
-            self.permaData = self.loadInfo(self.fileNameRoot + ".json")
+        if (os.path.isfile(self.fileNameRoot)):
+            self.permaData = self.loadInfo(self.fileNameRoot)
     
         else:
             self.permaData = {}
@@ -84,7 +84,7 @@ class igInteraction(jsonConstructor):
 
         ##Check/Iterate in Profile photos##
         #self.Profile = igProfile(self)
-        for i in range (5):
+        for i in range (4):
             #logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
             self.writeInfo(self.fileNameRoot, "w", self.permaData)
