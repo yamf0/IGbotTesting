@@ -38,8 +38,8 @@ class igStart():
             start Chrome & IG
         """
         
-        exitCode = self.driveObj.downloadFile("photoInfoHistory.json")
-        if (exitCode == 0): exit()
+        #exitCode = self.driveObj.downloadFile("photoInfoHistory.json")
+        #if (exitCode == 0): exit()
 
         #Open chrome
         if(platform.system == 'Windows'):
