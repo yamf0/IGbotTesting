@@ -42,7 +42,7 @@ class igStart():
         #if (exitCode == 0): exit()
 
         #Open chrome
-        if(platform.system == 'Windows'):
+        if(platform.system() == 'Windows'):
             self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
         else:
             self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver")
