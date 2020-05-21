@@ -137,6 +137,12 @@ class igInteraction(jsonConstructor):
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                     self.antiBan.randomSleep()
                     continue
+                #Check if comments are disabled
+                if (self.hasXpath()):
+                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                    print ("Foto con comentarios desabilitados")
+                    self.antiBan.randomSleep()
+                    continue
                 #Do the necessary math to see if making the comment
                 choice = random.choices([True,False],[((math.e)**((self.comCount/self.maxComm)-1)),((math.e)**(-self.comCount/self.maxComm))],k=1)
                 print (choice[0])
@@ -231,6 +237,14 @@ class igInteraction(jsonConstructor):
         if fill == "#ed4956":
             return True
         else:
+            return False
+
+    def hasXpath(self):
+
+        try:
+            self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/div[3]/div")
+            return True
+        except:
             return False
 
     def checkComment(self,realPath):
