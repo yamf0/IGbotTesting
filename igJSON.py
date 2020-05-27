@@ -6,6 +6,12 @@
 '''
 from igStart import igStart
 from igAntiban import igAntiban
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
+
 
 from time import sleep
 import json
@@ -46,6 +52,7 @@ class jsonConstructor (igStart):
                 return self.web_driver.find_element_by_xpath(path).get_attribute(attribute)
         except:
             print("element not found")
+            return None
 
 
     def append (self, data, key, dictAppend):
@@ -99,7 +106,7 @@ class jsonConstructor (igStart):
 
             return dict
         """
-        with open(jsonPath, "r") as file:
+        with open(jsonPath, "r", encoding="utf8") as file:
             dictionary = json.load(file)
             return dictionary
 
@@ -130,3 +137,62 @@ class jsonConstructor (igStart):
             """, self.web_driver.find_element_by_xpath(path))
             print("SCROLLING")
 
+    def fastCheck(self):
+        """
+            Hover over fotos to retrieve Likes and Comments
+            
+            return
+                -> likes: list of list with likes and commets from X first photos 
+                -> elements: list of webdriver elements where photos are
+        """
+        self.action = ActionChains(self.web_driver)
+        likes = []
+        sleep(3)
+        elements = []
+        ##hover over Photos to get numbers##
+        elements = self.web_driver.find_elements_by_xpath("//div[@class = 'eLAPa']")
+        
+        while True:
+            try:
+                self.web_driver.execute_script("arguments[0].click();", elements[0])
+                self.exceptionHandler("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']")
+                break
+            except StaleElementReferenceException as Ex:
+                element = self.web_driver.find_element_by_xpath("//div[@class = 'eLAPa']")
+                print("KKKKKKKKKKKK")
+
+        
+
+
+        print(len(elements) % 10 + 10)
+        for i in range(len(elements) % 10 + 10):
+            
+            self.action.move_to_element(elements[i]).perform()
+            ##Find Elements that has a sibling span, focus on the preceding one##
+            likes.append(self.getListAttributes("//ul[@class='Ln-UN']//span/preceding-sibling::span"))
+            likes[i] = self.convertToInt(likes[i])
+            
+            ##Save original Index##
+            likes[i].append(i)
+        return likes, elements
+    
+    def convertToInt(self, string):
+        """
+            Convert a str to int
+            Variables
+                ->string : list or string to convert (list must all be strings)
+
+            return
+                -> num : converted int
+        """
+        if isinstance(string, str):
+            string = string.replace(",","")
+            string = string.replace(".","")
+            string = string.replace("k","000")
+            num = int(string)
+        else:
+            for i in range(len(string)):
+                string[i] = self.convertToInt(string[i])
+            num = string
+        return num
+        
