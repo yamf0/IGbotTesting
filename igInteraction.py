@@ -81,7 +81,7 @@ class igInteraction(jsonConstructor):
         self.photoData = {}
 
         ##List of current run Likes of photos##
-        self.likes = np.random.randint(280, size=200)
+        self.likes = np.random.randint(280, size=700)
 
         ##Code to check followers
         
@@ -89,7 +89,7 @@ class igInteraction(jsonConstructor):
         #self.followers.profile()
 
         ##Check/Iterate in Profile photos##
-        self.Profile = igProfile(self)
+        #self.Profile = igProfile(self)
         for i in range (4):
             #logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
@@ -156,12 +156,15 @@ class igInteraction(jsonConstructor):
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                     self.antiBan.randomSleep()
                     continue
+
                 #Check if comments are disabled
-                if (self.hasXpath()):
+                if (self.hasXpath("/html/body/div[4]/div[2]/div/article/div[2]/div[3]/div")):
+                    #Close Photo
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
-                    print ("Foto con comentarios desabilitados")
+                    print ("Comments on Photo are Disabled")
                     self.antiBan.randomSleep()
                     continue
+
                 #Do the necessary math to see if making the comment
                 choice = random.choices([True,False],[((math.e)**((self.comCount/self.maxComm)-1)),((math.e)**(-self.comCount/self.maxComm))],k=1)
                 print (choice[0])
@@ -290,10 +293,10 @@ class igInteraction(jsonConstructor):
         else:
             return False
 
-    def hasXpath(self):
+    def hasXpath(self, path):
 
         try:
-            self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/div[3]/div")
+            self.web_driver.find_element_by_xpath(path)
             return True
         except:
             return False
