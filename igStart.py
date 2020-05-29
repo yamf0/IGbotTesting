@@ -83,6 +83,7 @@ class igStart():
                 self.web_driver.find_element_by_xpath(xpath).click()
                 break
             except Exception as ex:
+                print("Exception: ")
                 print(ex)
                 if (trys): trys -= 1
                 sleep(3)

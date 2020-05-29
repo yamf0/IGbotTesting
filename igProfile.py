@@ -88,9 +88,6 @@ class igProfile(jsonConstructor):
             h = self.getListAttributes("//a[@class=' xil3i']")
             t = self.timeOfRun
 
-            ##get list of people who liked the photo
-            profiles = self.getLikesNames()
-
             sleep(1)
             self.append(({"Likes": l,"Fecha": f,"Hastags": h}), i, self.hashtagInfo)
             self.append(self.hashtagInfo,t,self.hashtime)
@@ -99,33 +96,11 @@ class igProfile(jsonConstructor):
             self.append(profiles, i, self.likesNames)
 
             #self.writeInfo("Likes","w",self.likesNames)
-
-
+            
             sleep(2)
             
             # self.getDict(t,self.hashtagInfo)
             self.exceptionHandler(pathperfil)
-            
-            
-
-    def getLikesNames (self):
-        """
-            Gets the Profiles of the Likes obtained from each photo
-        """
-        likesButtonPath = "//*[local-name()='div' and @class='Nm9Fw']/*[local-name()='button']"
-        self.exceptionHandler(likesButtonPath)
-
-        ##Scroll through names
-        self.scrollList("//*[local-name()='div' and @class= 'pbNvD  fPMEg   ' and @role='dialog']/div[contains(@class,'Igw0E')]/div")
-
-        
-        profiles = self.getListAttributes("//*[local-name()='div' and contains(@class , 'HVWg4')]/div[2]/div//a")
-
-        sleep(1)
-        ##CLOSE LIST
-        self.web_driver.find_element_by_xpath("//div[@class = 'WaOAr']/button[ @class= 'wpO6b ']").click()
-        return profiles
-
 
     def compareLikesProfiles (self, dictionary, key= "num"):
         """

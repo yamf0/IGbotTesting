@@ -34,6 +34,10 @@ logging.config.fileConfig('logging.conf')
 
 logger = logging.getLogger('root')
 
+from scipy.stats import norm
+import numpy as np
+
+
 #Lists of hashstags & comments.
 poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
 "#wanderlusting", "#wanderluster", "#europetravel","#sunset","#traveltheworld", "#travellingthroughtheworld"]
@@ -71,17 +75,20 @@ class igInteraction(jsonConstructor):
         self.fileNameRoot = self.username 
         #self.driveObj = driveFile()
         self.openAccount()
-        self.antiBan = igAntiban()
+        self.antiBan = igAntiban(self)
         ##JSON for current run##
         self.hashtagData = {}
         ##Permanent JSON for Data Science##
         ##return Dict for username running##
-        if (os.path.isfile(self.fileNameRoot)):
-            self.permaData = self.loadInfo(self.fileNameRoot)
+        if (os.path.isfile(self.fileNameRoot + ".json")):
+            self.permaData = self.loadInfo(self.fileNameRoot + ".json")
     
         else:
             self.permaData = {}
         self.photoData = {}
+
+        ##List of current run Likes of photos##
+        self.likes = np.random.randint(280, size=700)
 
         ##Code to check followers
         
@@ -97,7 +104,19 @@ class igInteraction(jsonConstructor):
         #self.driveObj.uploadFile(self.fileNameRoot)
         self.web_driver.quit()
         
-    
+    def enterHashtag(self, hashtagGlobal):
+        """
+            Will enter a hashtag
+
+            Variables:
+                ->hashtagGlobal: hashtag to enter to
+        """
+        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtagGlobal)
+        self.antiBan.randomSleep()
+        self.exceptionHandler("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]")
+        self.antiBan.randomSleep()
+        return 1
+
     def iterateHastag(self,hashtagGlobal):
         """
             Will iterate through the hastags
@@ -113,6 +132,7 @@ class igInteraction(jsonConstructor):
         self.antiBan.randomSleep()
         self.exceptionHandler("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]")
         self.antiBan.randomSleep()
+        self.prof = 3
         self.iteratePhotos("top",hashtagGlobal)
     
     def iteratePhotos(self, section, hashtagGlobal):
@@ -143,17 +163,46 @@ class igInteraction(jsonConstructor):
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                     self.antiBan.randomSleep()
                     continue
+
+                #Check if comments are disabled
+                if (self.hasXpath("/html/body/div[4]/div[2]/div/article/div[2]/div[3]/div")):
+                    #Close Photo
+                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                    print ("Comments on Photo are Disabled")
+                    self.antiBan.randomSleep()
+                    continue
+
                 #Do the necessary math to see if making the comment
                 choice = random.choices([True,False],[((math.e)**((self.comCount/self.maxComm)-1)),((math.e)**(-self.comCount/self.maxComm))],k=1)
                 print (choice[0])
                 print(self.comCount)
+
+                ##check if Photo is liked##
+                photoLikes = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text")
+                
+                sleep(2)
+
+                if(photoLikes):
+                    if("," in photoLikes):  photoLikes = photoLikes.replace(",","")
+                    photoLikes = int(photoLikes) 
+                    self.likes = np.append(self.likes, photoLikes)
+                else:
+                    photoLikes = 0
+                mu, std = norm.fit(self.likes)
+                
+                ##check for 2 z deviations from center##
+                cool = mu + 2 * std
+                print("Photos with more than {} Likes are cool".format(cool))
+                
+               
                 if (choice[0]):
+
+                    
                     ##Get info Photos##
                     photoInfo = {}
 
                     photoNumber = self.maxComm - self.comCount 
                     photoProfile = self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
-                    photoLikes = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text")
                     photoInfoInsta = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt")
                     photoLink = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
 
@@ -184,16 +233,28 @@ class igInteraction(jsonConstructor):
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.usedComment)
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
                     self.antiBan.randomSleep()
+
+                    ##Will Photo be opened or not???##
+                
+                    
                     ##close photo
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                     if not (self.checkComment(realPath)):
-                        self.antiBan.histories(self.web_driver)
+                        self.antiBan.histories()
                         return 
                     if (self.comCount==0):
                         self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                         return                
+                    #cool <= photoLikes and self.prof >= 0
+                    if (cool <= photoLikes and self.prof >= 0): 
+                        self.prof -= 1
+                        self.antiBan.enterProfile(hashtagGlobal)
+                        continue
+                        #self.exceptionHandler(realPath)
+                        #self.antiBan.randomSleep()
+                       
                 #This is the close button
-                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                self.exceptionHandler("/html/body/div[4]/div[3]/button", 5)
                 self.antiBan.randomSleep()
         if (section == "recent"): return
         #Re-run Hashtag for recent photos
@@ -237,6 +298,14 @@ class igInteraction(jsonConstructor):
         if fill == "#ed4956":
             return True
         else:
+            return False
+
+    def hasXpath(self, path):
+
+        try:
+            self.web_driver.find_element_by_xpath(path)
+            return True
+        except:
             return False
 
     def checkComment(self,realPath):
