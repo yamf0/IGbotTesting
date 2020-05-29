@@ -49,7 +49,9 @@ class igStart():
 
         #Open chrome
         if(platform.system() == 'Windows'):
-            self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver" )
+            self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
+        elif(platform.system()== 'Linux'):
+            self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver_daniel")
         else:
             self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver")
         self.web_driver.get("https://instagram.com")
