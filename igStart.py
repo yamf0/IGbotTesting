@@ -18,9 +18,15 @@ from selenium.webdriver.remote.command import Command
 from selenium.common.exceptions import NoSuchElementException
 #Libraries used to avoid being banned
 #Library to print personalize message. Allows more control in message control 
-import logging
-from logging import StreamHandler
 
+
+#---------------------LOGGER--------------------------------#
+import logging
+import logging.config
+
+logging.config.fileConfig('logging.conf')
+
+logger = logging.getLogger('igStart')
 
 #path to chrome driver##
 path_driver = os.path.dirname(os.path.realpath(__file__))
@@ -43,7 +49,7 @@ class igStart():
 
         #Open chrome
         if(platform.system() == 'Windows'):
-            self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
+            self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver" )
         else:
             self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver")
         self.web_driver.get("https://instagram.com")
@@ -59,6 +65,7 @@ class igStart():
         self.exceptionHandler("/html/body/div[4]/div/div/div[3]/button[2]",3)
         sleep(3)
         self.timeOfRun = datetime.utcnow().strftime('%m/%d/%Y %H:%M:%S %Z') 
+        logger.info("Access Granted")
         ##We are in
         
     def exceptionHandler (self,xpath, trys= None):

@@ -25,8 +25,14 @@ import random
 import argparse
 import math
 #Library to print personalize message. Allows more control in message control 
-import logging
 
+#---------------------LOGGER--------------------------------#
+import logging
+import logging.config
+
+logging.config.fileConfig('logging.conf')
+
+logger = logging.getLogger('root')
 
 #Lists of hashstags & comments.
 poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
@@ -83,9 +89,9 @@ class igInteraction(jsonConstructor):
         #self.followers.profile()
 
         ##Check/Iterate in Profile photos##
-        #self.Profile = igProfile(self)
+        self.Profile = igProfile(self)
         for i in range (4):
-            #logger.info("Hashtag number: {} ".format(i))
+            logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
             self.writeInfo(self.fileNameRoot, "w", self.permaData)
         #self.driveObj.uploadFile(self.fileNameRoot)
@@ -239,7 +245,7 @@ class igInteraction(jsonConstructor):
         self.antiBan.randomSleep()
         try:
             self.web_driver.find_element_by_xpath("//div/article//h3[//a[contains(text(),\"{}\")]]/following-sibling::span".format(self.username))
-            #logger.info("Comment was succesfully made")
+            logger.info("Comment was succesfully made")
             return True
         except:
             #logger.warning("Unable to find Comment")
