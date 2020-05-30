@@ -24,7 +24,7 @@ class igProfile(jsonConstructor):
         Will open the profile and click on the first picture
 
         """
-        self.antiBan = igAntiban()
+        self.antiBan = igAntiban(self)
         #Entra al perfil, analiza el numero de post que tiene y abre la primera foto
         self.web_driver = obj.web_driver
         self.timeOfRun = obj.timeOfRun
