@@ -79,7 +79,6 @@ class igInteraction(jsonConstructor):
             self.driveObj = driveFile(self)
 
         self.openAccount()
-        self.driveObj.uploadFile(self.fileNames)
 
         self.antiBan = igAntiban(self)
         ##JSON for current run##
@@ -102,6 +101,9 @@ class igInteraction(jsonConstructor):
             logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
             self.writeInfo(self.fileNameRoot, "w", self.permaData)
+        
+        self.driveObj.uploadFile(self.fileNames)
+
         self.web_driver.quit()
         
     def enterHashtag(self, hashtagGlobal):
