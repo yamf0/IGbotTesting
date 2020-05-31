@@ -32,6 +32,7 @@ logger = logging.getLogger('igStart')
 path_driver = os.path.dirname(os.path.realpath(__file__))
 print (path_driver)
 
+driverFiles = []
 class igStart():
     """
         Class that starts Chrome Instance and opens IG
@@ -44,8 +45,10 @@ class igStart():
             start Chrome & IG
         """
         
-        #exitCode = self.driveObj.downloadFile("photoInfoHistory.json")
-        #if (exitCode == 0): exit()
+        if self.runDrive:
+            self.fileNames = [self.username + ".json", "likesProfiles.json", "photoInfoHistory.json" ]
+            exitCode = self.driveObj.downloadFile(self.fileNames)
+            if (exitCode == 0): exit()
 
         #Open chrome
         if(platform.system() == 'Windows'):

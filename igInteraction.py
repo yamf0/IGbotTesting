@@ -61,7 +61,7 @@ class igInteraction(jsonConstructor):
     """
         Class that starts the interaction through Likes & Comments
     """
-    def __init__(self,username,pw):
+    def __init__(self,username,pw, arguments):
         """
             Starting the instagram iteraction 
 
@@ -73,8 +73,14 @@ class igInteraction(jsonConstructor):
         self.username = username
         self.pw = pw
         self.fileNameRoot = self.username 
-        #self.driveObj = driveFile()
+        self.runDrive = arguments.drive
+
+        if self.runDrive == True:
+            self.driveObj = driveFile(self)
+
         self.openAccount()
+        self.driveObj.uploadFile(self.fileNames)
+
         self.antiBan = igAntiban(self)
         ##JSON for current run##
         self.hashtagData = {}
@@ -82,7 +88,6 @@ class igInteraction(jsonConstructor):
         ##return Dict for username running##
         if (os.path.isfile(self.fileNameRoot + ".json")):
             self.permaData = self.loadInfo(self.fileNameRoot + ".json")
-    
         else:
             self.permaData = {}
         self.photoData = {}
@@ -101,7 +106,6 @@ class igInteraction(jsonConstructor):
             logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
             self.writeInfo(self.fileNameRoot, "w", self.permaData)
-        #self.driveObj.uploadFile(self.fileNameRoot)
         self.web_driver.quit()
         
     def enterHashtag(self, hashtagGlobal):
@@ -321,22 +325,28 @@ class igInteraction(jsonConstructor):
             return False
 
 def main ():
-    #Little GUI
-    var = input("Test code in Mexico(1) // Test code in Germany (2) // Any other number for another account ")
-    if(var == '1'):
-        Bot = igInteraction('photoandtravel2020','mannheimzittau')
-    elif(var == '2'):
-        Bot = igInteraction('travelandphoto2020','mannheimzittau')  
-    else: 
-        account = input("Please give the account username")
-        password = input("Please give the password")
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("-a", "--account", help="Account to run (m for MexicanTest, D for GermanyTest, Account name for other)")
+    parser.add_argument("-p", "--password", help="Password to account", default= None)
+    parser.add_argument("-d", "--drive", help="Will drive download Info", default=False, action="store_true")
+
+    args = parser.parse_args()
+
+    if (args.account == "m"):
+        Bot = igInteraction('photoandtravel2020','mannheimzittau', args)
+    
+    elif (args.account == "d"):
+        Bot = igInteraction('travelandphoto2020','mannheimzittau', args) 
+    
+    else:
+        account = args.account
+        password = args.password
         print("You entered: " + account)
         print("You entered: " + password)
-        var_2 = input("Is the data true(1)? Any other number for no.")
-        if(var_2 == '1'):
-            Bot = igInteraction(account,password)
-        else:
-            print("Input error")
+        sleep(2)
+        Bot = igInteraction(account,password, args)
+
 
 if __name__ == "__main__":
     main()
