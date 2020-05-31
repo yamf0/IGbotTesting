@@ -90,13 +90,9 @@ class igInteraction(jsonConstructor):
         ##List of current run Likes of photos##
         self.likes = np.random.randint(280, size=700)
 
-        ##Code to check followers
-        
-        #self.followers = igFollowers(self)
-        #self.followers.profile()
-
         ##Check/Iterate in Profile photos##
         #self.Profile = igProfile(self)
+        
         for i in range (4):
             logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
