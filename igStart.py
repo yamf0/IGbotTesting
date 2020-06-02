@@ -46,7 +46,7 @@ class igStart():
         """
         
         if self.runDrive:
-            self.fileNames = [self.username + ".json", "likesProfiles.json", "photoInfoHistory.json" ]
+            self.fileNames = [self.username + ".json", "likesProfiles.json"]
             exitCode = self.driveObj.downloadFile(self.fileNames)
             if (exitCode == 0): exit()
 
