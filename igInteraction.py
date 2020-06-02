@@ -92,7 +92,7 @@ class igInteraction(jsonConstructor):
         self.photoData = {}
 
         ##List of current run Likes of photos##
-        self.likes = np.random.randint(280, size=700)
+        self.likes = np.random.randint(280, size=300)
 
         ##Check/Iterate in Profile photos##
         #self.Profile = igProfile(self)

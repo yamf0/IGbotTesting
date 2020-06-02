@@ -98,6 +98,12 @@ class driveFile():
             ->1 :  File was downloaded
             ->0 : File couldnt be found
         """
+        for file in fileNames:
+            if os.path.exists(file):
+                continue
+            else:
+                fileNames.remove(file)
+        
         file_list = self.drive.ListFile({'q': "'{}' in parents and trashed=false".format(self.thisRunFolder["id"])}).GetList()
 
         for finFolder in file_list:

@@ -79,9 +79,10 @@ class igAntiban(igStart):
             ##Like Photo
             if(random.choice([True,False])):
                 self.exceptionHandler("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button")
-            sleep(1)
+            
             ##close photo##
             self.exceptionHandler("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']")
+            sleep(2)
         self.obj.enterHashtag(returnHashtag)
         return 1
 
