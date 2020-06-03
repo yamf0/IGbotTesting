@@ -101,8 +101,9 @@ class igInteraction(jsonConstructor):
             logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
             self.writeInfo(self.fileNameRoot, "w", self.permaData)
-        
-        self.driveObj.uploadFile(self.fileNames)
+            
+        if self.runDrive == True:
+            self.driveObj.uploadFile(self.fileNames)
 
         self.web_driver.quit()
         
