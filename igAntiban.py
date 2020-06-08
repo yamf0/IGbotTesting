@@ -70,7 +70,9 @@ class igAntiban(igStart):
         #print(best)
         for i in range(len(best)):
             print(elements[best[i]])
-            self.web_driver.execute_script("arguments[0].click();", elements[best[i]])
+            errorCode = self.obj.interactThread(self.exceptionHandler, path= elements[best[i]], trys= 3)
+            if errorCode == 1: continue
+            #self.web_driver.execute_script("arguments[0].click();", elements[best[i]])
             #self.iteratePhotos(elements[best[i]])
             sleep(3)
             if(self.obj.havingLike()): 

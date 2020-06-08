@@ -15,6 +15,8 @@ from igProfile import igProfile
 import os
 #Library to control the timings of execution
 from time import sleep
+import threading
+from concurrent import futures
 #Principal library for web scrapping
 from selenium import webdriver
 from selenium.webdriver.common import keys
@@ -34,8 +36,11 @@ logging.config.fileConfig('logging.conf')
 
 logger = logging.getLogger('root')
 
+#Library to Data science
 from scipy.stats import norm
 import numpy as np
+#Library for checking the code
+import inspect
 
 
 #Lists of hashstags & comments.
@@ -101,7 +106,7 @@ class igInteraction(jsonConstructor):
             logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
             self.writeInfo(self.fileNameRoot, "w", self.permaData)
-            
+
         if self.runDrive == True:
             self.driveObj.uploadFile(self.fileNames)
 
@@ -159,7 +164,10 @@ class igInteraction(jsonConstructor):
                 #click the image
                 realPath=pathInit+pathI+pathJ+pathEnd
                 #HERE WE TRY THE EXCEPTION HANDLER
-                self.exceptionHandler(realPath)
+                errorCode = self.interactThread(self.exceptionHandler, path= realPath, trys= 3)
+                if errorCode == 1:
+                    continue
+                #self.exceptionHandler(realPath)
                 self.antiBan.randomSleep()
                 #Search previous Like
                 if (self.havingLike()):
@@ -322,11 +330,35 @@ class igInteraction(jsonConstructor):
         except:
             #logger.warning("Unable to find Comment")
             return False
+       
+    def interactThread (self, func, **kwargs):
+        """
+            Open a Path which reference to an image using Threads
+
+            Variables:
+                ->path: relative path to the image to open
+        """
+        arguments= inspect.getfullargspec(func)[0][1:]
+        default = func.__defaults__
+        #print(default)
+        
+        if len(kwargs) < len(arguments)-len(default):
+            logger.error("You missed an argument to pass, passed args {}, required {}".format(kwargs, arguments))
+            return 1
+    
+        args = [arg for arg in kwargs.values()]
+        #Try to click the image
+        with futures.ThreadPoolExecutor() as ex:
+            f1 = ex.submit(func, *args)
+            result = f1.result()
+            return result
+
+        print ("RESULS",result)
 
 def main ():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-a", "--account", help="Account to run (m for MexicanTest, D for GermanyTest, Account name for other)")
+    parser.add_argument("-a", "--account", help="Account to run (m for MexicanTest, d for GermanyTest, Account name for other)")
     parser.add_argument("-p", "--password", help="Password to account", default= None)
     parser.add_argument("-d", "--drive", help="Will drive download Info", default=False, action="store_true")
 

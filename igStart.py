@@ -73,7 +73,7 @@ class igStart():
         logger.info("Access Granted")
         ##We are in
         
-    def exceptionHandler (self,xpath, trys= None):
+    def exceptionHandler (self, xpath, trys= None):
         """
             Method will try to click Xpath, if not find will wait untill it is found (Solves Bad internet Issue)
 
@@ -82,12 +82,20 @@ class igStart():
         """
         while (True):
             try:
-                if(trys == 0 and not None): break
-                self.web_driver.find_element_by_xpath(xpath).click()
+                if(trys == 0 and not None): 
+                    errorCode = 1
+                    break
+                ##Check if the Path passed is a webdriver object or a string Xpath object
+                if type(xpath) == str:
+                    self.web_driver.find_element_by_xpath(xpath).click()
+                else:
+                    xpath.click()
+                errorCode = 0
                 break
             except Exception as ex:
                 print("Exception: ")
                 print(ex)
                 if (trys): trys -= 1
                 sleep(3)
-                continue        
+                continue 
+        return errorCode       
