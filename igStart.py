@@ -67,6 +67,11 @@ class igStart():
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
         sleep(3)
         #click accept
+        try:
+            self.exceptionHandler(' //div//button[contains(text( ), "no")]')
+            sleep(2)
+        except:
+            pass
         self.exceptionHandler("/html/body/div[4]/div/div/div[3]/button[2]",3)
         sleep(3)
         self.timeOfRun = datetime.utcnow().strftime('%m/%d/%Y %H:%M:%S %Z') 
