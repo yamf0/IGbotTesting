@@ -42,7 +42,7 @@ class igStart():
 
     def openAccount(self):
         """
-            start Chrome & IG
+            Start Chrome & IG
         """
         
         if self.runDrive:
@@ -104,3 +104,18 @@ class igStart():
                 sleep(3)
                 continue 
         return errorCode       
+
+    def getCurrentStatus (self):
+        """
+            Get the current status or current window
+        """
+
+        #Initial Window /html/body/div[1]/section/main/section
+        #Hashtag Window /html/body/div[1]/section/main/article
+        #Hashtag Photo /html/body/div[4] class="_2dDPU CkGkG" Se agrega otro div
+        #Profile window /html/body/div[1]/section/main/div  Este no parte a un article seguido, sino hasta despues
+            ## dEBAJO DE ESE DIV ESTA header - div - div - div 
+        #profile photo /html/body/div[4]  class="_2dDPU CkGkG"
+        #Histories /html/body/div[1]/section/div/div class="yS4wN "
+
+        pass

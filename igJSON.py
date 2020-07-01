@@ -145,6 +145,8 @@ class jsonConstructor (igStart):
                 -> likes: list of list with likes and commets from X first photos 
                 -> elements: list of webdriver elements where photos are
         """
+
+        #TODO se tiene que arreglar este codigo para que no hoverie por todas las fotos en cada loop
         self.action = ActionChains(self.web_driver)
         likes = []
         sleep(3)
@@ -159,7 +161,6 @@ class jsonConstructor (igStart):
                 break
             except StaleElementReferenceException as Ex:
                 element = self.web_driver.find_element_by_xpath("//div[@class = 'eLAPa']")
-                print("KKKKKKKKKKKK")
 
         
 

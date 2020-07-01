@@ -61,12 +61,12 @@ comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great 
     "Amazing Place!", "that is Amazing!", "WOW", "Perfect!"]
 
 
-
+#TODO CHANGE find_element_by_xpath --->> find_element(By.XPATH, xpath)
 class igInteraction(jsonConstructor):
     """
         Class that starts the interaction through Likes & Comments
     """
-    def __init__(self,username,pw, arguments):
+    def __init__(self, username, pw, arguments):
         """
             Starting the instagram iteraction 
 
@@ -75,6 +75,7 @@ class igInteraction(jsonConstructor):
                 username: account name
                 pw: password name
         """
+        
         self.username = username
         self.pw = pw
         self.fileNameRoot = self.username 
@@ -83,9 +84,10 @@ class igInteraction(jsonConstructor):
         if self.runDrive == True:
             self.driveObj = driveFile(self)
 
-        self.openAccount()
+        self.openAccount() #TODO Se hara con el Main
 
-        self.antiBan = igAntiban(self)
+        #TODO CREAR TODOS LOS OBJETOS DE LAS FUNCIONES QUE NECESITEMOS AQUI
+        self.antiBan = igAntiban(self) 
         ##JSON for current run##
         self.hashtagData = {}
         ##Permanent JSON for Data Science##
@@ -96,22 +98,26 @@ class igInteraction(jsonConstructor):
             self.permaData = {}
         self.photoData = {}
 
+        #TODO meter un argumento en ARGPARSE para saber si vamos a correr lo de meterse a una cuenta de una foto con muchos likes
+        ## esto nos quita tiempo si lo que se quiere es solo probar // parte del codigo de abajo se tendria que mover a un if##
         ##List of current run Likes of photos##
         self.likes = np.random.randint(280, size=300)
 
         ##Check/Iterate in Profile photos##
         #self.Profile = igProfile(self)
         
+        #TODO Cambiar esto apra que se mande a llamar desde el main Aqui iteramos en el init (esta mal)
         for i in range (4):
             logger.info("Hashtag number: {} ".format(i))
             self.iterateHastag(self.generateHashtag())
             self.writeInfo(self.fileNameRoot, "w", self.permaData)
 
+        #TODO migrar a main
         if self.runDrive == True:
             self.driveObj.uploadFile(self.fileNames)
 
         self.web_driver.quit()
-        
+       
     def enterHashtag(self, hashtagGlobal):
         """
             Will enter a hashtag
@@ -119,6 +125,7 @@ class igInteraction(jsonConstructor):
             Variables:
                 ->hashtagGlobal: hashtag to enter to
         """
+        
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtagGlobal)
         self.antiBan.randomSleep()
         self.exceptionHandler("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]")
@@ -130,17 +137,20 @@ class igInteraction(jsonConstructor):
             Will iterate through the hastags
 
             Variables:
-                hashtagGlobal: hashtag used in iteration
+                ->hashtagGlobal: hashtag used in iteration
         """
         self.hashtagData.update({hashtagGlobal:{}})
         self.comCount = 10
         self.maxComm = self.comCount
+
+        #TODO cambiar por el metodo nuevo
         ##Search the Hashtag
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtagGlobal)
         self.antiBan.randomSleep()
         self.exceptionHandler("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]")
         self.antiBan.randomSleep()
         self.prof = 3
+        #TODO Buscar aqui las fotos que estan en cada ### (tomar como base el de iterar perfil ajeno) para no hacerlo por recursion
         self.iteratePhotos("top",hashtagGlobal)
     
     def iteratePhotos(self, section, hashtagGlobal):
@@ -150,6 +160,8 @@ class igInteraction(jsonConstructor):
             Variables:
                 section: HTML div element
         """
+
+        #TODO esto se soluciona con el ultimo commentario
         if section == "top" :
             pathInit = "/html/body/div[1]/section/main/article/div[1]/div/div/"    
         else:
@@ -163,18 +175,24 @@ class igInteraction(jsonConstructor):
                 self.usedComment = self.generateComment()
                 #click the image
                 realPath=pathInit+pathI+pathJ+pathEnd
+                
+                #TODO ver como se puede integrar lo de thread al nuevo codigo
                 #HERE WE TRY THE EXCEPTION HANDLER
-                errorCode = self.interactThread(self.exceptionHandler, path= realPath, trys= 3)
+                errorCode = self.interactThread(func= self.exceptionHandler, path= realPath, trys= 3)
                 if errorCode == 1:
+                    self.antiBan.randomSleep()
                     continue
                 #self.exceptionHandler(realPath)
                 self.antiBan.randomSleep()
                 #Search previous Like
                 if (self.havingLike()):
+                    logger.info("Photo already has like or could not open photo")
+                    #close the picture
                     self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                     self.antiBan.randomSleep()
                     continue
 
+                #TODO INTEGRAR HAS XPATH EN OTROS LUGARES QUE HACEMOS LO MISMO     
                 #Check if comments are disabled
                 if (self.hasXpath("/html/body/div[4]/div[2]/div/article/div[2]/div[3]/div")):
                     #Close Photo
@@ -188,6 +206,8 @@ class igInteraction(jsonConstructor):
                 print (choice[0])
                 print(self.comCount)
 
+                
+                ##<<<<<<<<TODO MANDAR Todo esto a una funcion (se encarga de checar si la foto es muy gustada o no)
                 ##check if Photo is liked##
                 photoLikes = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text")
                 
@@ -205,10 +225,11 @@ class igInteraction(jsonConstructor):
                 cool = mu + 2 * std
                 print("Photos with more than {} Likes are cool".format(cool))
                 
+                ### END TODO>>>>>
                
                 if (choice[0]):
 
-                    
+                    ###TODO esto se podria mandar a otro lado (hay que discutirlo)
                     ##Get info Photos##
                     photoInfo = {}
 
@@ -236,6 +257,8 @@ class igInteraction(jsonConstructor):
                     self.writeInfo("photoInfo","w",self.hashtagData)
 
                     self.comCount = self.comCount - 1
+
+                    #TODO MANDAR ESTAS A LA FUNCION NUEVA DE EXCEPTION HANDLER
                     #Click Like
                     self.exceptionHandler("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button")
                     self.antiBan.randomSleep()
@@ -271,6 +294,7 @@ class igInteraction(jsonConstructor):
         #Re-run Hashtag for recent photos
         self.iteratePhotos("recent",hashtagGlobal)
 
+    #TODO migrate to igJson
     def generateHashtag(self):
         """
             Will choose randomly a Hashtag and return its value
@@ -280,6 +304,7 @@ class igInteraction(jsonConstructor):
         poss.pop(choose)
         return hashtag
     
+    #TODO migrate to igJson
     def generateComment (self):
         """
             Will choose a comment depending on the hashtag that was opened
@@ -299,18 +324,18 @@ class igInteraction(jsonConstructor):
                 print(fill)
                 break
             except Exception as ex:
-                #logger.warning("Could not Find the Like Button")
+                logger.warning("Could not Find the Like Button")
                 self.antiBan.randomSleep()
                 i+= 1
                 if (i == 5) :
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                    break
                 continue
 
         if fill == "#ed4956":
             return True
         else:
             return False
-
+    #TODO migrate to igJson
     def hasXpath(self, path):
 
         try:
@@ -331,18 +356,21 @@ class igInteraction(jsonConstructor):
             #logger.warning("Unable to find Comment")
             return False
        
-    def interactThread (self, func, **kwargs):
+    def interactThread (self, **kwargs):
         """
             Open a Path which reference to an image using Threads
 
             Variables:
                 ->path: relative path to the image to open
         """
+        
+        func = kwargs["func"]
+        kwargs.pop("func")
         arguments= inspect.getfullargspec(func)[0][1:]
         default = func.__defaults__
         #print(default)
         
-        if len(kwargs) < len(arguments)-len(default):
+        if len(kwargs)  < len(arguments)-len(default):
             logger.error("You missed an argument to pass, passed args {}, required {}".format(kwargs, arguments))
             return 1
     
@@ -351,9 +379,10 @@ class igInteraction(jsonConstructor):
         with futures.ThreadPoolExecutor() as ex:
             f1 = ex.submit(func, *args)
             result = f1.result()
+            print ("RESULTS",result)
             return result
 
-        print ("RESULS",result)
+        
 
 def main ():
     parser = argparse.ArgumentParser()
