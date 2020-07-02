@@ -230,7 +230,7 @@ class igInteraction(jsonConstructor):
                 if (choice[0]):
 
                     ##Get the info of the photo and save the information in the Jsons##
-                    self.getPhotoInfo()
+                    self.getPhotoInfo(photoLikes, hashtagGlobal)
 
                     self.comCount = self.comCount - 1
 
@@ -319,7 +319,7 @@ class igInteraction(jsonConstructor):
             return True
         except:
             return False
-    def getPhotoInfo(self):
+    def getPhotoInfo(self, photoLikes, hashtagGlobal):
         """
             Will get the information of the current opened photo
             
@@ -399,6 +399,8 @@ class igInteraction(jsonConstructor):
             result = f1.result()
             print ("RESULTS",result)
             return result
+
+
 
 def main ():
     parser = argparse.ArgumentParser()
