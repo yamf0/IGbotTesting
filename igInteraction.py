@@ -327,40 +327,40 @@ class igInteraction(jsonConstructor):
         """
 
             #create writable Dict
-            photoInfo = {}
+        photoInfo = {}
 
-            photoNumber = self.maxComm - self.comCount 
-            #get profile of the photo
-            photoProfile = self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
-            #get info of the foto from IG
-            photoInfoInsta = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt")
-            #Get link of photo
-            photoLink = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
-            #Get hashtags from photo
-            photoHashtags = self.getListAttributes("//*[local-name()='a' and @class = ' xil3i']")
+        photoNumber = self.maxComm - self.comCount 
+        #get profile of the photo
+        photoProfile = self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
+        #get info of the foto from IG
+        photoInfoInsta = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt")
+        #Get link of photo
+        photoLink = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
+        #Get hashtags from photo
+        photoHashtags = self.getListAttributes("//*[local-name()='a' and @class = ' xil3i']")
 
-            ##Get the last number photo in dictionary
-            if(self.timeOfRun in self.permaData.keys()):
-                lastNumber = list(self.permaData[self.timeOfRun].keys())[-1] + 1
-            else:
-                lastNumber = 0
-            
-            ##Put info into Server JSON##
-            photoData = {"Profile": photoProfile,"Likes": photoLikes,"hashtag": photoHashtags}
-            #put photoData under last photo number in photoData global dict
-            self.append(photoData, (lastNumber) , self.photoData)
-            #put photoData global under time of run in the permament Data dict (this will be appended to all times ran dictionary)
-            self.append(self.photoData, self.timeOfRun, self.permaData)
+        ##Get the last number photo in dictionary
+        if(self.timeOfRun in self.permaData.keys()):
+            lastNumber = list(self.permaData[self.timeOfRun].keys())[-1] + 1
+        else:
+            lastNumber = 0
+        
+        ##Put info into Server JSON##
+        photoData = {"Profile": photoProfile,"Likes": photoLikes,"hashtag": photoHashtags}
+        #put photoData under last photo number in photoData global dict
+        self.append(photoData, (lastNumber) , self.photoData)
+        #put photoData global under time of run in the permament Data dict (this will be appended to all times ran dictionary)
+        self.append(self.photoData, self.timeOfRun, self.permaData)
 
 
-            ##Put info into Local JSON##
-            ##this info will help for the generation of the Comments
-            self.append(({"Profile": photoProfile,"Likes": photoLikes,"InfoInsta": photoInfoInsta,"Link": photoLink}), photoNumber, photoInfo)
-            self.append(photoInfo, hashtagGlobal, self.hashtagData)
-            ##Write to the Json the information
-            self.writeInfo("photoInfo","w",self.hashtagData)
+        ##Put info into Local JSON##
+        ##this info will help for the generation of the Comments
+        self.append(({"Profile": photoProfile,"Likes": photoLikes,"InfoInsta": photoInfoInsta,"Link": photoLink}), photoNumber, photoInfo)
+        self.append(photoInfo, hashtagGlobal, self.hashtagData)
+        ##Write to the Json the information
+        self.writeInfo("photoInfo","w",self.hashtagData)
 
-            return 0 
+        return 0 
 
     def checkComment(self,realPath):
         #Opening photo again
@@ -399,8 +399,6 @@ class igInteraction(jsonConstructor):
             result = f1.result()
             print ("RESULTS",result)
             return result
-
-        
 
 def main ():
     parser = argparse.ArgumentParser()
