@@ -42,25 +42,6 @@ import numpy as np
 #Library for checking the code
 import inspect
 
-
-#Lists of hashstags & comments.
-poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
-"#wanderlusting", "#wanderluster", "#europetravel","#sunset","#traveltheworld", "#travellingthroughtheworld"]
-comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great Photos", "This place is amazing",\
-    "This is amazing", "Congrats for the great photo", "What a Pic!!!", "That is great!",\
-    "Wow that pic!", "This place is amazing", "Keep up the great photos", "Amazing",\
-    "Perfect!", "Amazing", "That is nice!", "Great",\
-    "What a destination", "That is amazing", "Great!!!",\
-    "Wish to be there","Cannot wait to be there","Nice photo",\
-    "Really love this part of the day",\
-    "Wish to be there","Cannot wait to be there","Maybe this is the sombrero next destination",\
-    "WOW", "This is Perfect", "Congrats for the great Photo", "Simply Beautiful",\
-    "Amazing pic!!", "Congrats, this is Great!", "That seems amazing!", "Great Pic",\
-    "Pff that is amazing", "Keep up the great Photos", "We loved it", "That is incredible",\
-    "Great Photo!", "We loved it!",\
-    "Amazing Place!", "that is Amazing!", "WOW", "Perfect!"]
-
-
 #TODO CHANGE find_element_by_xpath --->> find_element(By.XPATH, xpath)
 class igInteraction(jsonConstructor):
     """
@@ -270,24 +251,6 @@ class igInteraction(jsonConstructor):
         #Re-run Hashtag for recent photos
         self.iteratePhotos("recent",hashtagGlobal)
 
-    #TODO migrate to igJson
-    def generateHashtag(self):
-        """
-            Will choose randomly a Hashtag and return its value
-        """
-        choose = random.randint(0,len(poss)-1)
-        hashtag = poss[choose]
-        poss.pop(choose)
-        return hashtag
-    
-    #TODO migrate to igJson
-    def generateComment (self):
-        """
-            Will choose a comment depending on the hashtag that was opened
-        """
-        num = random.randint(0,len(comm)-1)
-        comment = comm[num]
-        return comment
 
     def havingLike (self):
         """
@@ -311,14 +274,7 @@ class igInteraction(jsonConstructor):
             return True
         else:
             return False
-    #TODO migrate to igJson
-    def hasXpath(self, path):
-
-        try:
-            self.web_driver.find_element_by_xpath(path)
-            return True
-        except:
-            return False
+    
     def getPhotoInfo(self, photoLikes, hashtagGlobal):
         """
             Will get the information of the current opened photo
