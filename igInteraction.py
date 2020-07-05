@@ -170,15 +170,16 @@ class igInteraction(jsonConstructor):
                 if (self.havingLike()):
                     logger.info("Photo already has like or could not open photo")
                     #close the picture
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                    self.web_driver.find_element_by_xpath("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']").click()
                     self.antiBan.randomSleep()
                     continue
 
                 #TODO INTEGRAR HAS XPATH EN OTROS LUGARES QUE HACEMOS LO MISMO     
                 #Check if comments are disabled
-                if (self.hasXpath("/html/body/div[4]/div[2]/div/article/div[2]/div[3]/div")):
+                if (self.hasXpath("//div[@class = '_7UhW9   xLCgt      MMzan        mDXrS   uL8Hv     l4b0S    ']")):
+                    #//div[contains(@class, 'MhyEU')]/div[@class = '_7UhW9   xLCgt      MMzan        mDXrS   uL8Hv     l4b0S    '] por si falla el otro
                     #Close Photo
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                    self.web_driver.find_element_by_xpath("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']").click()
                     print ("Comments on Photo are Disabled")
                     self.antiBan.randomSleep()
                     continue
@@ -191,7 +192,7 @@ class igInteraction(jsonConstructor):
                 
                 ##<<<<<<<<TODO MANDAR Todo esto a una funcion (se encarga de checar si la foto es muy gustada o no)
                 ##check if Photo is liked##
-                photoLikes = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text")
+                photoLikes = self.getAttributes("//div//button[@class = 'sqdOP yWX7d     _8A5w5    ']/span","text")
                 
                 sleep(2)
 
@@ -218,24 +219,24 @@ class igInteraction(jsonConstructor):
 
                     #TODO MANDAR ESTAS A LA FUNCION NUEVA DE EXCEPTION HANDLER
                     #Click Like
-                    self.exceptionHandler("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button")
+                    self.exceptionHandler("//div[contains(@class, eo2As)]//span[@class = 'fr66n']/button")
                     self.antiBan.randomSleep()
                     ##Click comment
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[2]/button").click()
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.usedComment)
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
+                    self.web_driver.find_element_by_xpath("//div[contains(@class, eo2As)]//span[@class = '_15y0l']/button").click()
+                    self.web_driver.find_element_by_xpath("//div[contains(@class, eo2As)]//form/textarea").send_keys(self.usedComment)
+                    self.web_driver.find_element_by_xpath("//div[contains(@class, eo2As)]//form/button").click()
                     self.antiBan.randomSleep()
 
                     ##Will Photo be opened or not???##
                 
                     
                     ##close photo
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                    self.web_driver.find_element_by_xpath("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']").click()
                     if not (self.checkComment(realPath)):
                         self.antiBan.histories()
                         return 
                     if (self.comCount==0):
-                        self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                        self.web_driver.find_element_by_xpath("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']").click()
                         return                
                     #cool <= photoLikes and self.prof >= 0
                     if (cool <= photoLikes and self.prof >= 0): 
@@ -246,7 +247,7 @@ class igInteraction(jsonConstructor):
                         #self.antiBan.randomSleep()
                        
                 #This is the close button
-                self.exceptionHandler("/html/body/div[4]/div[3]/button", 5)
+                self.exceptionHandler("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']", 5)
                 self.antiBan.randomSleep()
         if (section == "recent"): return
         #Re-run Hashtag for recent photos
