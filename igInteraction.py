@@ -107,9 +107,9 @@ class igInteraction(jsonConstructor):
                 ->hashtagGlobal: hashtag to enter to
         """
         
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtagGlobal)
+        self.web_driver.find_element_by_xpath("//input[@type = 'text' or @class = 'XTCLo x3qfX']").send_keys(hashtagGlobal)
         self.antiBan.randomSleep()
-        self.exceptionHandler("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]")
+        self.exceptionHandler("//div[@class = 'fuqBx']//a[1]")
         self.antiBan.randomSleep()
         return 1
 
@@ -126,9 +126,10 @@ class igInteraction(jsonConstructor):
 
         #TODO cambiar por el metodo nuevo
         ##Search the Hashtag
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtagGlobal)
+        sleep(2)
+        self.web_driver.find_element_by_xpath("//input[@type = 'text' or @class = 'XTCLo x3qfX']").send_keys(hashtagGlobal)
         self.antiBan.randomSleep()
-        self.exceptionHandler("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]")
+        self.exceptionHandler("//div[@class = 'fuqBx']//a[1]")
         self.antiBan.randomSleep()
         self.prof = 3
         #TODO Buscar aqui las fotos que estan en cada ### (tomar como base el de iterar perfil ajeno) para no hacerlo por recursion

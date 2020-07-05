@@ -58,6 +58,7 @@ class igStart():
         else:
             self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver")
         self.web_driver.get("https://instagram.com")
+        self.web_driver.maximize_window()
         sleep(2)
         #Input account and pw
         self.web_driver.find_element_by_name("username").send_keys(self.username)
@@ -67,12 +68,9 @@ class igStart():
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
         sleep(3)
         #click accept
-        try:
-            self.exceptionHandler(' //div//button[contains(text( ), "no")]')
-            sleep(2)
-        except:
-            pass
-        self.exceptionHandler("/html/body/div[4]/div/div/div[3]/button[2]",3)
+        self.web_driver.find_element_by_xpath(' //div//button[contains(text( ), "no")]').click()
+        sleep(2)
+        self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div/div/div[3]/button[2]").click()
         sleep(3)
         self.timeOfRun = datetime.utcnow().strftime('%m/%d/%Y %H:%M:%S %Z') 
         logger.info("Access Granted")
