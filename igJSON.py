@@ -16,7 +16,27 @@ from selenium.webdriver.common.action_chains import ActionChains
 from time import sleep
 import json
 import os
+import random
 
+
+#Lists of hashstags & comments.
+poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
+"#wanderlusting", "#wanderluster", "#europetravel","#sunset","#traveltheworld", "#travellingthroughtheworld"]
+comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great Photos", "This place is amazing",\
+    "This is amazing", "Congrats for the great photo", "What a Pic!!!", "That is great!",\
+    "Wow that pic!", "This place is amazing", "Keep up the great photos", "Amazing",\
+    "Perfect!", "Amazing", "That is nice!", "Great",\
+    "What a destination", "That is amazing", "Great!!!",\
+    "Wish to be there","Cannot wait to be there","Nice photo",\
+    "Really love this part of the day",\
+    "Wish to be there","Cannot wait to be there","Maybe this is the sombrero next destination",\
+    "WOW", "This is Perfect", "Congrats for the great Photo", "Simply Beautiful",\
+    "Amazing pic!!", "Congrats, this is Great!", "That seems amazing!", "Great Pic",\
+    "Pff that is amazing", "Keep up the great Photos", "We loved it", "That is incredible",\
+    "Great Photo!", "We loved it!",\
+    "Amazing Place!", "that is Amazing!", "WOW", "Perfect!"]
+
+    
 class jsonConstructor (igStart):
     """
         Class that handles the construction of all required JSON's 
@@ -145,6 +165,8 @@ class jsonConstructor (igStart):
                 -> likes: list of list with likes and commets from X first photos 
                 -> elements: list of webdriver elements where photos are
         """
+
+        #TODO se tiene que arreglar este codigo para que no hoverie por todas las fotos en cada loop
         self.action = ActionChains(self.web_driver)
         likes = []
         sleep(3)
@@ -159,7 +181,6 @@ class jsonConstructor (igStart):
                 break
             except StaleElementReferenceException as Ex:
                 element = self.web_driver.find_element_by_xpath("//div[@class = 'eLAPa']")
-                print("KKKKKKKKKKKK")
 
         
 
@@ -196,3 +217,28 @@ class jsonConstructor (igStart):
             num = string
         return num
         
+
+    def hasXpath(self, path):
+
+        try:
+            self.web_driver.find_element_by_xpath(path)
+            return True
+        except:
+            return False
+
+    def generateHashtag(self):
+        """
+            Will choose randomly a Hashtag and return its value
+        """
+        choose = random.randint(0,len(poss)-1)
+        hashtag = poss[choose]
+        poss.pop(choose)
+        return hashtag
+    
+    def generateComment (self):
+        """
+            Will choose a comment depending on the hashtag that was opened
+        """
+        num = random.randint(0,len(comm)-1)
+        comment = comm[num]
+        return comment
