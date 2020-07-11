@@ -177,7 +177,7 @@ class jsonConstructor ():
         while True:
             try:
                 self.web_driver.execute_script("arguments[0].click();", elements[0])
-                igStart.exceptionHandler("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']")
+                self.web_driver.exceptionHandler("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']")
                 break
             except StaleElementReferenceException as Ex:
                 element = self.web_driver.find_element_by_xpath("//div[@class = 'eLAPa']")
