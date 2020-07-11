@@ -8,6 +8,7 @@ from driveFile import driveFile
 
 import os
 import platform
+import numpy as np
 #Library to control the timings of execution
 from time import sleep
 from datetime import datetime
@@ -22,6 +23,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 #Libraries used to avoid being banned
 from igAntiban import igAntiban
+from igInteraction import igInteraction
+from igJSON import jsonConstructor
 #Library to print personalize message. Allows more control in message control 
 
 
@@ -82,7 +85,7 @@ class igStart():
         ##Permanent JSON for Data Science##
         ##return Dict for username running##
         if (os.path.isfile(self.fileNameRoot + ".json")):
-            self.permaData = self.loadInfo(self.fileNameRoot + ".json")
+            self.permaData = jsonConstructor.loadInfo(self.fileNameRoot + ".json")
         else:
             self.permaData = {}
         self.photoData = {}
@@ -90,23 +93,7 @@ class igStart():
         #TODO meter un argumento en ARGPARSE para saber si vamos a correr lo de meterse a una cuenta de una foto con muchos likes
         ## esto nos quita tiempo si lo que se quiere es solo probar // parte del codigo de abajo se tendria que mover a un if##
         ##List of current run Likes of photos##
-        self.likes = np.random.randint(280, size=300)
-
-        ##Check/Iterate in Profile photos##
-        #self.Profile = igProfile(self)
-        
-        #TODO Cambiar esto apra que se mande a llamar desde el main Aqui iteramos en el init (esta mal)
-        for i in range (4):
-            logger.info("Hashtag number: {} ".format(i))
-            self.iterateHastag(self.generateHashtag())
-            self.writeInfo(self.fileNameRoot, "w", self.permaData)
-
-        #TODO migrar a main
-        if self.runDrive == True:
-            self.driveObj.uploadFile(self.fileNames)
-
-        self.web_driver.quit()
-
+        self.likes = np.random.randint(280, size=300)  
         
     def exceptionHandler (self, xpath, trys= None):
         """

@@ -34,7 +34,7 @@ import logging.config
 
 logging.config.fileConfig('logging.conf')
 
-logger = logging.getLogger('root')
+logger = logging.getLogger('igInteraction')
 
 #Library to Data science
 from scipy.stats import norm
@@ -43,7 +43,7 @@ import numpy as np
 import inspect
 
 #TODO CHANGE find_element_by_xpath --->> find_element(By.XPATH, xpath)
-class igInteraction(jsonConstructor):
+class igInteraction():
     """
         Class that starts the interaction through Likes & Comments
     """

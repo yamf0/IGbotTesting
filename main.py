@@ -2,6 +2,14 @@ import argparse
 from time import sleep
 from igStart import igStart
 from igProfile import Profile
+from igInteraction import igInteraction
+from igJSON import jsonConstructor
+import logging
+import logging.config
+
+logging.config.fileConfig('logging.conf')
+
+logger = logging.getLogger('root')
 
 def main():
     parser = argparse.ArgumentParser()
@@ -26,7 +34,19 @@ def main():
     
     Perfil = Profile(Bot)
     Perfil.iterarFotos(Bot)
-    sleep(5)        
+    sleep(5)
+    #TODO Cambiar esto apra que se mande a llamar desde el main Aqui iteramos en el init (esta mal)
+    for i in range (4):
+        logger.info("Hashtag number: {} ".format(i))
+        igInteraction.iterateHastag(jsonConstructor.generateHashtag())
+        jsonConstructor.writeInfo(igStart.fileNameRoot, "w", igStart.permaData)
+
+    #TODO migrar a main
+    if self.runDrive == True:
+        self.driveObj.uploadFile(self.fileNames)
+
+    #Ciere de instancia del web driver 
+    Bot.driver.quit()
 
 
 if __name__ == "__main__":
