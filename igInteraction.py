@@ -47,6 +47,9 @@ class igInteraction():
     """
         Class that starts the interaction through Likes & Comments
     """
+    def __init__(self, obj):
+        super().__init__()
+        self.web_driver = obj
 
     def enterHashtag(self, hashtagGlobal):
         """
@@ -57,9 +60,9 @@ class igInteraction():
         """
         
         self.web_driver.find_element_by_xpath("//input[@type = 'text' or @class = 'XTCLo x3qfX']").send_keys(hashtagGlobal)
-        self.antiBan.randomSleep()
-        self.exceptionHandler("//div[@class = 'fuqBx']//a[1]")
-        self.antiBan.randomSleep()
+        self.web_driver.antiBan.randomSleep()
+        self.web_driver.exceptionHandler("//div[@class = 'fuqBx']//a[1]")
+        self.web_driver.antiBan.randomSleep()
         return 1
 
     def iterateHastag(self,hashtagGlobal):
@@ -69,6 +72,7 @@ class igInteraction():
             Variables:
                 ->hashtagGlobal: hashtag used in iteration
         """
+        #Esto ya no existe, hay que cambiarlo a lo que sea que era 
         self.hashtagData.update({hashtagGlobal:{}})
         self.comCount = 10
         self.maxComm = self.comCount
@@ -77,9 +81,9 @@ class igInteraction():
         ##Search the Hashtag
         sleep(2)
         self.web_driver.find_element_by_xpath("//input[@type = 'text' or @class = 'XTCLo x3qfX']").send_keys(hashtagGlobal)
-        self.antiBan.randomSleep()
-        self.exceptionHandler("//div[@class = 'fuqBx']//a[1]")
-        self.antiBan.randomSleep()
+        self.web_driver.antiBan.randomSleep()
+        self.web_driver.exceptionHandler("//div[@class = 'fuqBx']//a[1]")
+        self.web_driver.antiBan.randomSleep()
         self.prof = 3
         #TODO Buscar aqui las fotos que estan en cada ### (tomar como base el de iterar perfil ajeno) para no hacerlo por recursion
         self.iteratePhotos("top",hashtagGlobal)
@@ -103,29 +107,29 @@ class igInteraction():
             for j in range(1,4):
                 pathJ = "/div[" + str(j) + "]"
                 #Generate the Comment for that point
-                self.usedComment = self.generateComment()
+                self.usedComment = self.web_driver.jsonobj.generateComment()
                 #click the image
                 realPath=pathInit+pathI+pathJ+pathEnd
                 
                 #TODO ver como se puede integrar lo de thread al nuevo codigo
                 #HERE WE TRY THE EXCEPTION HANDLER
-                errorCode = self.interactThread(func= self.exceptionHandler, path= realPath, trys= 3)
+                errorCode = self.interactThread(func= self.web_driver.exceptionHandler, path= realPath, trys= 3)
                 if errorCode == 1:
-                    self.antiBan.randomSleep()
+                    self.web_driver.antiBan.randomSleep()
                     continue
                 #self.exceptionHandler(realPath)
-                self.antiBan.randomSleep()
+                self.web_driver.antiBan.randomSleep()
                 #Search previous Like
                 if (self.havingLike()):
                     logger.info("Photo already has like or could not open photo")
                     #close the picture
                     self.web_driver.find_element_by_xpath("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']").click()
-                    self.antiBan.randomSleep()
+                    self.web_driver.antiBan.randomSleep()
                     continue
 
                 #TODO INTEGRAR HAS XPATH EN OTROS LUGARES QUE HACEMOS LO MISMO     
                 #Check if comments are disabled
-                if (self.hasXpath("//div[@class = '_7UhW9   xLCgt      MMzan        mDXrS   uL8Hv     l4b0S    ']")):
+                if (self.web_driver.jsonobj.hasXpath("//div[@class = '_7UhW9   xLCgt      MMzan        mDXrS   uL8Hv     l4b0S    ']")):
                     #//div[contains(@class, 'MhyEU')]/div[@class = '_7UhW9   xLCgt      MMzan        mDXrS   uL8Hv     l4b0S    '] por si falla el otro
                     #Close Photo
                     self.web_driver.find_element_by_xpath("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']").click()

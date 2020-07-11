@@ -35,11 +35,12 @@ def main():
     Perfil = Profile(Bot)
     Perfil.iterarFotos(Bot)
     sleep(5)
+    Iterar = igInteraction(Bot)
 
     for i in range (4):
         logger.info("Hashtag number: {} ".format(i))
-        igInteraction.iterateHastag(jsonConstructor.generateHashtag())
-        jsonConstructor.writeInfo(Bot.fileNameRoot, "w", Bot.permaData)
+        Iterar.iterateHastag(Bot.jsonobj.generateHashtag())
+        Bot.jsonobj.writeInfo(Bot.fileNameRoot, "w", Bot.permaData)
 
     #TODO migrar a main
     if Bot.runDrive == True:

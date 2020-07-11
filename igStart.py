@@ -79,13 +79,14 @@ class igStart():
             self.driveObj = driveFile(self)
 
         #TODO CREAR TODOS LOS OBJETOS DE LAS FUNCIONES QUE NECESITEMOS AQUI
-        self.antiBan = igAntiban(self) 
+        self.antiBan = igAntiban(self)
+        self.jsonobj = jsonConstructor(self)
         ##JSON for current run##
         self.hashtagData = {}
         ##Permanent JSON for Data Science##
         ##return Dict for username running##
         if (os.path.isfile(self.fileNameRoot + ".json")):
-            self.permaData = jsonConstructor.loadInfo(self.fileNameRoot + ".json")
+            self.permaData = self.jsonobj.loadInfo(self.fileNameRoot + ".json")
         else:
             self.permaData = {}
         self.photoData = {}
@@ -109,7 +110,7 @@ class igStart():
                     break
                 ##Check if the Path passed is a webdriver object or a string Xpath object
                 if type(xpath) == str:
-                    self.web_driver.find_element_by_xpath(xpath).click()
+                    self.driver.find_element_by_xpath(xpath).click()
                 else:
                     xpath.click()
                 errorCode = 0
