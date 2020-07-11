@@ -47,58 +47,7 @@ class igInteraction(jsonConstructor):
     """
         Class that starts the interaction through Likes & Comments
     """
-    def __init__(self, username, pw, arguments):
-        """
-            Starting the instagram iteraction 
 
-            Variables:
-
-                username: account name
-                pw: password name
-        """
-        
-        self.username = username
-        self.pw = pw
-        self.fileNameRoot = self.username 
-        self.runDrive = arguments.drive
-
-        if self.runDrive == True:
-            self.driveObj = driveFile(self)
-
-        self.openAccount() #TODO Se hara con el Main
-
-        #TODO CREAR TODOS LOS OBJETOS DE LAS FUNCIONES QUE NECESITEMOS AQUI
-        self.antiBan = igAntiban(self) 
-        ##JSON for current run##
-        self.hashtagData = {}
-        ##Permanent JSON for Data Science##
-        ##return Dict for username running##
-        if (os.path.isfile(self.fileNameRoot + ".json")):
-            self.permaData = self.loadInfo(self.fileNameRoot + ".json")
-        else:
-            self.permaData = {}
-        self.photoData = {}
-
-        #TODO meter un argumento en ARGPARSE para saber si vamos a correr lo de meterse a una cuenta de una foto con muchos likes
-        ## esto nos quita tiempo si lo que se quiere es solo probar // parte del codigo de abajo se tendria que mover a un if##
-        ##List of current run Likes of photos##
-        self.likes = np.random.randint(280, size=300)
-
-        ##Check/Iterate in Profile photos##
-        #self.Profile = igProfile(self)
-        
-        #TODO Cambiar esto apra que se mande a llamar desde el main Aqui iteramos en el init (esta mal)
-        for i in range (4):
-            logger.info("Hashtag number: {} ".format(i))
-            self.iterateHastag(self.generateHashtag())
-            self.writeInfo(self.fileNameRoot, "w", self.permaData)
-
-        #TODO migrar a main
-        if self.runDrive == True:
-            self.driveObj.uploadFile(self.fileNames)
-
-        self.web_driver.quit()
-       
     def enterHashtag(self, hashtagGlobal):
         """
             Will enter a hashtag
@@ -357,32 +306,3 @@ class igInteraction(jsonConstructor):
             result = f1.result()
             print ("RESULTS",result)
             return result
-
-
-
-def main ():
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument("-a", "--account", help="Account to run (m for MexicanTest, d for GermanyTest, Account name for other)")
-    parser.add_argument("-p", "--password", help="Password to account", default= None)
-    parser.add_argument("-d", "--drive", help="Will drive download Info", default=False, action="store_true")
-
-    args = parser.parse_args()
-
-    if (args.account == "m"):
-        Bot = igInteraction('photoandtravel2020','mannheimzittau', args)
-    
-    elif (args.account == "d"):
-        Bot = igInteraction('travelandphoto2020','mannheimzittau', args) 
-    
-    else:
-        account = args.account
-        password = args.password
-        print("You entered: " + account)
-        print("You entered: " + password)
-        sleep(2)
-        Bot = igInteraction(account,password, args)
-
-
-if __name__ == "__main__":
-    main()

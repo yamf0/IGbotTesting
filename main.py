@@ -23,7 +23,7 @@ def main():
         print("You entered: " + password)
         sleep(2)
         Bot = igStart(account,password, args)
-        
+    
     Perfil = Profile(Bot)
     Perfil.iterarFotos(Bot)
     sleep(5)        

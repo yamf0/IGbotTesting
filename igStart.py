@@ -21,6 +21,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 #Libraries used to avoid being banned
+from igAntiban import igAntiban
 #Library to print personalize message. Allows more control in message control 
 
 
@@ -41,13 +42,8 @@ class igStart():
     """
         Class that starts Chrome Instance and opens IG
     """
-    def __init__(self):
+    def __init__(self, username, password, args):
         super().__init__()
-        
-        if self.runDrive:
-            self.fileNames = [self.username + ".json", "likesProfiles.json"]
-            exitCode = self.driveObj.downloadFile(self.fileNames)
-            if (exitCode == 0): exit()
 
         #Open chrome
         if(platform.system() == 'Windows'):
@@ -66,6 +62,50 @@ class igStart():
         logger.info("Access Granted")
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//img[contains(@alt, 'Instagram')]"))).click()
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[4]//button[2][@tabindex=\"0\"]"))).click()
+
+        #TODO Checar instancia de creacion de archivos google drive 
+        """ if self.runDrive:
+            self.fileNames = [self.username + ".json", "likesProfiles.json"]
+            exitCode = self.driveObj.downloadFile(self.fileNames)
+            if (exitCode == 0): exit() """
+
+        self.fileNameRoot = username 
+        self.runDrive = args.drive
+
+        if self.runDrive == True:
+            self.driveObj = driveFile(self)
+
+        #TODO CREAR TODOS LOS OBJETOS DE LAS FUNCIONES QUE NECESITEMOS AQUI
+        self.antiBan = igAntiban(self) 
+        ##JSON for current run##
+        self.hashtagData = {}
+        ##Permanent JSON for Data Science##
+        ##return Dict for username running##
+        if (os.path.isfile(self.fileNameRoot + ".json")):
+            self.permaData = self.loadInfo(self.fileNameRoot + ".json")
+        else:
+            self.permaData = {}
+        self.photoData = {}
+
+        #TODO meter un argumento en ARGPARSE para saber si vamos a correr lo de meterse a una cuenta de una foto con muchos likes
+        ## esto nos quita tiempo si lo que se quiere es solo probar // parte del codigo de abajo se tendria que mover a un if##
+        ##List of current run Likes of photos##
+        self.likes = np.random.randint(280, size=300)
+
+        ##Check/Iterate in Profile photos##
+        #self.Profile = igProfile(self)
+        
+        #TODO Cambiar esto apra que se mande a llamar desde el main Aqui iteramos en el init (esta mal)
+        for i in range (4):
+            logger.info("Hashtag number: {} ".format(i))
+            self.iterateHastag(self.generateHashtag())
+            self.writeInfo(self.fileNameRoot, "w", self.permaData)
+
+        #TODO migrar a main
+        if self.runDrive == True:
+            self.driveObj.uploadFile(self.fileNames)
+
+        self.web_driver.quit()
 
         
     def exceptionHandler (self, xpath, trys= None):
