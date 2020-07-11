@@ -35,15 +35,15 @@ def main():
     Perfil = Profile(Bot)
     Perfil.iterarFotos(Bot)
     sleep(5)
-    #TODO Cambiar esto apra que se mande a llamar desde el main Aqui iteramos en el init (esta mal)
+
     for i in range (4):
         logger.info("Hashtag number: {} ".format(i))
         igInteraction.iterateHastag(jsonConstructor.generateHashtag())
-        jsonConstructor.writeInfo(igStart.fileNameRoot, "w", igStart.permaData)
+        jsonConstructor.writeInfo(Bot.fileNameRoot, "w", Bot.permaData)
 
     #TODO migrar a main
-    if self.runDrive == True:
-        self.driveObj.uploadFile(self.fileNames)
+    if Bot.runDrive == True:
+        Bot.driveObj.uploadFile(Bot.fileNames)
 
     #Ciere de instancia del web driver 
     Bot.driver.quit()
