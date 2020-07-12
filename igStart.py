@@ -8,6 +8,7 @@ from driveFile import driveFile
 
 import os
 import platform
+import numpy as np
 #Library to control the timings of execution
 from time import sleep
 from datetime import datetime
@@ -16,7 +17,14 @@ from selenium import webdriver
 from selenium.webdriver.common import keys
 from selenium.webdriver.remote.command import Command
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 #Libraries used to avoid being banned
+from igAntiban import igAntiban
+from igInteraction import igInteraction
+from igJSON import jsonConstructor
 #Library to print personalize message. Allows more control in message control 
 
 
@@ -37,44 +45,53 @@ class igStart():
     """
         Class that starts Chrome Instance and opens IG
     """
-    def __init__(self):
-       pass
-
-    def openAccount(self):
-        """
-            Start Chrome & IG
-        """
-        
-        if self.runDrive:
-            self.fileNames = [self.username + ".json", "likesProfiles.json"]
-            exitCode = self.driveObj.downloadFile(self.fileNames)
-            if (exitCode == 0): exit()
+    def __init__(self, username, password, args):
+        super().__init__()
 
         #Open chrome
         if(platform.system() == 'Windows'):
-            self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
+            self.driver = webdriver.Chrome("./chrome/chromedriver.exe" )
         elif(platform.system()== 'Linux'):
-            self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver_daniel")
+            self.driver = webdriver.Chrome()
         else:
-            self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver")
-        self.web_driver.get("https://instagram.com")
-        self.web_driver.maximize_window()
-        sleep(2)
-        #Input account and pw
-        self.web_driver.find_element_by_name("username").send_keys(self.username)
-        sleep(1)
-        self.web_driver.find_element_by_name("password").send_keys(self.pw)
-        sleep (1)
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
-        sleep(3)
-        #click accept
-        self.web_driver.find_element_by_xpath(' //div//button[contains(text( ), "no")]').click()
-        sleep(2)
-        self.web_driver.find_element_by_xpath("/html/body/div[4]/div/div/div/div[3]/button[2]").click()
-        sleep(3)
-        self.timeOfRun = datetime.utcnow().strftime('%m/%d/%Y %H:%M:%S %Z') 
+            self.driver = webdriver.Chrome("./chrome/chromedriver")
+        logger.warning("This code was executed from {}".format(platform.system()))
+
+        #Access information
+        self.driver.maximize_window()
+        self.driver.get("https://instagram.com")
+        self.username = WebDriverWait(self.driver,10).until(EC.presence_of_element_located((By.NAME, 'username'))).send_keys(username)
+        self.password = WebDriverWait(self.driver,10).until(EC.presence_of_element_located((By.NAME, 'password'))).send_keys(password + Keys.ENTER)
         logger.info("Access Granted")
-        ##We are in
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//img[contains(@alt, 'Instagram')]"))).click()
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[4]//button[2][@tabindex=\"0\"]"))).click()
+
+        #TODO Checar instancia de creacion de archivos google drive 
+        """ if self.runDrive:
+            self.fileNames = [self.username + ".json", "likesProfiles.json"]
+            exitCode = self.driveObj.downloadFile(self.fileNames)
+            if (exitCode == 0): exit() """
+
+        self.fileNameRoot = username 
+        self.runDrive = args.drive
+
+        if self.runDrive == True:
+            self.driveObj = driveFile(self)
+
+        #TODO CREAR TODOS LOS OBJETOS DE LAS FUNCIONES QUE NECESITEMOS AQUI
+        self.antiBan = igAntiban(self)
+        self.jsonObj = jsonConstructor(self)
+        ##JSON for current run##
+        self.hashtagData = {}
+        ##Permanent JSON for Data Science##
+        ##return Dict for username running##
+        if (os.path.isfile(self.fileNameRoot + ".json")):
+            self.permaData = self.jsonobj.loadInfo(self.fileNameRoot + ".json")
+        else:
+            self.permaData = {}
+        self.photoData = {}
+
+        self.likes = np.random.randint(280, size=300)  
         
     def exceptionHandler (self, xpath, trys= None):
         """
@@ -90,7 +107,7 @@ class igStart():
                     break
                 ##Check if the Path passed is a webdriver object or a string Xpath object
                 if type(xpath) == str:
-                    self.web_driver.find_element_by_xpath(xpath).click()
+                    self.driver.find_element_by_xpath(xpath).click()
                 else:
                     xpath.click()
                 errorCode = 0

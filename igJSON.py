@@ -37,7 +37,7 @@ comm = ["what an amazing pic!", "Perfection", "We loved it", "Keep up the Great 
     "Amazing Place!", "that is Amazing!", "WOW", "Perfect!"]
 
     
-class jsonConstructor (igStart):
+class jsonConstructor ():
     """
         Class that handles the construction of all required JSON's 
 
@@ -53,7 +53,7 @@ class jsonConstructor (igStart):
 
     def __init__(self,web_driver):
         self.web_driver = web_driver
-        self.antiBan = igAntiban()
+        self.antiBan = igAntiban(web_driver)
 
     def getAttributes(self, path, attribute):
         """
@@ -177,7 +177,7 @@ class jsonConstructor (igStart):
         while True:
             try:
                 self.web_driver.execute_script("arguments[0].click();", elements[0])
-                self.exceptionHandler("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']")
+                self.web_driver.exceptionHandler("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']")
                 break
             except StaleElementReferenceException as Ex:
                 element = self.web_driver.find_element_by_xpath("//div[@class = 'eLAPa']")
