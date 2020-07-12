@@ -61,6 +61,7 @@ class igInteraction(jsonConstructor):
         self.pw = pw
         self.fileNameRoot = self.username 
         self.runDrive = arguments.drive
+        self.likedPhotos = arguments.likedphotos
 
         if self.runDrive == True:
             self.driveObj = driveFile(self)
@@ -78,10 +79,7 @@ class igInteraction(jsonConstructor):
         else:
             self.permaData = {}
         self.photoData = {}
-
-        #TODO meter un argumento en ARGPARSE para saber si vamos a correr lo de meterse a una cuenta de una foto con muchos likes
-        ## esto nos quita tiempo si lo que se quiere es solo probar // parte del codigo de abajo se tendria que mover a un if##
-        ##List of current run Likes of photos##
+    
         self.likes = np.random.randint(280, size=300)
 
         ##Check/Iterate in Profile photos##
@@ -189,26 +187,8 @@ class igInteraction(jsonConstructor):
                 print (choice[0])
                 print(self.comCount)
 
-                
-                ##<<<<<<<<TODO MANDAR Todo esto a una funcion (se encarga de checar si la foto es muy gustada o no)
-                ##check if Photo is liked##
-                photoLikes = self.getAttributes("//div//button[@class = 'sqdOP yWX7d     _8A5w5    ']/span","text")
-                
-                sleep(2)
-
-                if(photoLikes):
-                    if("," in photoLikes):  photoLikes = photoLikes.replace(",","")
-                    photoLikes = int(photoLikes) 
-                    self.likes = np.append(self.likes, photoLikes)
-                else:
-                    photoLikes = 0
-                mu, std = norm.fit(self.likes)
-                
-                ##check for 2 z deviations from center##
-                cool = mu + 2 * std
-                print("Photos with more than {} Likes are cool".format(cool))
-                
-                ### END TODO>>>>>
+                ##Check the number of likes the photo has and if it is a cool photo or not
+                photoLikes, cool = self.coolPhoto()
                
                 if (choice[0]):
 
@@ -239,7 +219,7 @@ class igInteraction(jsonConstructor):
                         self.web_driver.find_element_by_xpath("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']").click()
                         return                
                     #cool <= photoLikes and self.prof >= 0
-                    if (cool <= photoLikes and self.prof >= 0): 
+                    if (cool <= photoLikes and self.prof >= 0 and self.likedPhotos): 
                         self.prof -= 1
                         self.antiBan.enterProfile(hashtagGlobal)
                         continue
@@ -320,6 +300,31 @@ class igInteraction(jsonConstructor):
 
         return 0 
 
+    def coolPhoto (self):
+        """
+            Check if the photo is really liked or not
+        """
+        ##<<<<<<<<TODO MANDAR Todo esto a una funcion (se encarga de checar si la foto es muy gustada o no)
+        ##check if Photo is liked##
+        photoLikes = self.getAttributes("//div//button[@class = 'sqdOP yWX7d     _8A5w5    ']/span","text")
+        
+        sleep(2)
+
+        if(photoLikes):
+            if("," in photoLikes):  photoLikes = photoLikes.replace(",","")
+            photoLikes = int(photoLikes) 
+            self.likes = np.append(self.likes, photoLikes)
+        else:
+            photoLikes = 0
+        mu, std = norm.fit(self.likes)
+        
+        ##check for 2 z deviations from center##
+        cool = mu + 2 * std
+        print("Photos with more than {} Likes are cool".format(cool))
+        
+        return photoLikes, cool
+       
+
     def checkComment(self,realPath):
         #Opening photo again
         self.web_driver.find_element_by_xpath(realPath).click()
@@ -366,6 +371,8 @@ def main ():
     parser.add_argument("-a", "--account", help="Account to run (m for MexicanTest, d for GermanyTest, Account name for other)")
     parser.add_argument("-p", "--password", help="Password to account", default= None)
     parser.add_argument("-d", "--drive", help="Will drive download Info", default=False, action="store_true")
+    parser.add_argument("-l", "--likedphotos", help="will enter most liked fotos at iteration", default=False, action="store_true")
+
 
     args = parser.parse_args()
 
