@@ -68,11 +68,12 @@ class igStart():
         sleep(3)
         #click accept
         try:
+            print("HHHHHHHHHH")
             self.exceptionHandler(' //div//button[contains(text( ), "no")]')
             sleep(2)
         except:
             pass
-        self.exceptionHandler("/html/body/div[4]/div/div/div[3]/button[2]",3)
+        self.exceptionHandler("//div//button[contains(text( ), \"no\")]",3)
         sleep(3)
         self.timeOfRun = datetime.utcnow().strftime('%m/%d/%Y %H:%M:%S %Z') 
         logger.info("Access Granted")

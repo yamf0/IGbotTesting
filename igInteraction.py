@@ -138,7 +138,7 @@ class igInteraction(jsonConstructor):
         ##Search the Hashtag
         self.web_driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input").send_keys(hashtagGlobal)
         self.antiBan.randomSleep()
-        self.exceptionHandler("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[2]/div[2]/div/a[1]")
+        self.exceptionHandler("//a[@class= 'yCE8d  '][1]")
         self.antiBan.randomSleep()
         self.prof = 3
         self.iteratePhotos("top",hashtagGlobal)
@@ -164,9 +164,10 @@ class igInteraction(jsonConstructor):
                 #click the image
                 realPath=pathInit+pathI+pathJ+pathEnd
                 #HERE WE TRY THE EXCEPTION HANDLER
-                errorCode = self.interactThread(self.exceptionHandler, path= realPath, trys= 3)
+                """errorCode = self.interactThread(self.exceptionHandler, path= realPath, trys= 3)
                 if errorCode == 1:
-                    continue
+                    continue"""
+                self.exceptionHandler(realPath, 3)
                 #self.exceptionHandler(realPath)
                 self.antiBan.randomSleep()
                 #Search previous Like
