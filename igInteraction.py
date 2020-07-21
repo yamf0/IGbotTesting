@@ -238,12 +238,12 @@ class igInteraction(jsonConstructor):
 
                     self.comCount = self.comCount - 1
                     #Click Like
-                    self.exceptionHandler("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]/button")
+                    self.exceptionHandler("(//div[@class='eo2As ']//button[@class='wpO6b '])[1]")
                     self.antiBan.randomSleep()
                     ##Click comment
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[2]/button").click()
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea").send_keys(self.usedComment)
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button").click()
+                    self.web_driver.find_element_by_xpath("(//div[@class='eo2As ']//button[@class='wpO6b '])[2]").click()
+                    self.web_driver.find_element_by_xpath("//textarea[contains(@class, 'Ypffh')]").send_keys(self.usedComment)
+                    self.web_driver.find_element_by_xpath("//textarea[contains(@class, 'Ypffh')]/following-sibling::button").click()
                     self.antiBan.randomSleep()
 
                     ##Will Photo be opened or not???##
@@ -296,7 +296,8 @@ class igInteraction(jsonConstructor):
         i=0;
         while (True):
             try:
-                fill = self.web_driver.find_element_by_xpath("//*[local-name()='span' and @class='fr66n']/*[local-name()='button']/*[local-name()='svg']").get_attribute("fill")
+                fill = self.web_driver.find_element_by_xpath("//div[@class='QBdPU ']/*[local-name()='svg'][1]")\
+                        .get_attribute("fill")
                 print(fill)
                 break
             except Exception as ex:
