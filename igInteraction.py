@@ -43,13 +43,14 @@ import numpy as np
 import inspect
 
 #TODO CHANGE find_element_by_xpath --->> find_element(By.XPATH, xpath)
-class igInteraction():
+class igInteraction(jsonConstructor):
     """
         Class that starts the interaction through Likes & Comments
     """
     def __init__(self, obj):
         super().__init__()
         self.web_driver = obj.driver
+        self.obj = obj
 
     def enterHashtag(self, hashtagGlobal):
         """
@@ -61,7 +62,7 @@ class igInteraction():
         
         self.web_driver.find_element_by_xpath("//input[@type = 'text' or @class = 'XTCLo x3qfX']").send_keys(hashtagGlobal)
         self.web_driver.antiBan.randomSleep()
-        self.web_driver.exceptionHandler("//div[@class = 'fuqBx']//a[1]")
+        self.obj.exceptionHandler("//div[@class = 'fuqBx']//a[1]")
         self.web_driver.antiBan.randomSleep()
         return 1
 
@@ -107,7 +108,7 @@ class igInteraction():
             for j in range(1,4):
                 pathJ = "/div[" + str(j) + "]"
                 #Generate the Comment for that point
-                self.usedComment = self.web_driver.jsonobj.generateComment()
+                self.usedComment = self.generateComment()
                 #click the image
                 realPath=pathInit+pathI+pathJ+pathEnd
                 
@@ -129,7 +130,7 @@ class igInteraction():
 
                 #TODO INTEGRAR HAS XPATH EN OTROS LUGARES QUE HACEMOS LO MISMO     
                 #Check if comments are disabled
-                if (self.web_driver.jsonobj.hasXpath("//div[@class = '_7UhW9   xLCgt      MMzan        mDXrS   uL8Hv     l4b0S    ']")):
+                if (self.hasXpath("//div[@class = '_7UhW9   xLCgt      MMzan        mDXrS   uL8Hv     l4b0S    ']")):
                     #//div[contains(@class, 'MhyEU')]/div[@class = '_7UhW9   xLCgt      MMzan        mDXrS   uL8Hv     l4b0S    '] por si falla el otro
                     #Close Photo
                     self.web_driver.find_element_by_xpath("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']").click()
@@ -224,13 +225,13 @@ class igInteraction():
 
         photoNumber = self.maxComm - self.comCount 
         #get profile of the photo
-        photoProfile = self.web_driver.jsonobj.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
+        photoProfile = self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
         #get info of the foto from IG
-        photoInfoInsta = self.web_driver.jsonobj.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt")
+        photoInfoInsta = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt")
         #Get link of photo
-        photoLink = self.web_driver.jsonobj.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
+        photoLink = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
         #Get hashtags from photo
-        photoHashtags = self.web_driver.jsonobj.getListAttributes("//*[local-name()='a' and @class = ' xil3i']")
+        photoHashtags = self.getListAttributes("//*[local-name()='a' and @class = ' xil3i']")
 
         ##Get the last number photo in dictionary
         if(self.web_driver.timeOfRun in self.web_driver.permaData.keys()):
@@ -241,17 +242,17 @@ class igInteraction():
         ##Put info into Server JSON##
         photoData = {"Profile": photoProfile,"Likes": photoLikes,"hashtag": photoHashtags}
         #put photoData under last photo number in photoData global dict
-        self.web_driver.jsonobj.append(photoData, (lastNumber) , self.web_driver.jsonobj.photoData)
+        self.append(photoData, (lastNumber) , self.photoData)
         #put photoData global under time of run in the permament Data dict (this will be appended to all times ran dictionary)
-        self.web_driver.jsonobj.append(self.web_driver.jsonobj.photoData, self.web_driver.jsonobj.timeOfRun, self.web_driver.jsonobj.permaData)
+        self.append(self.photoData, self.timeOfRun, self.permaData)
 
 
         ##Put info into Local JSON##
         ##this info will help for the generation of the Comments
-        self.web_driver.jsonobj.append(({"Profile": photoProfile,"Likes": photoLikes,"InfoInsta": photoInfoInsta,"Link": photoLink}), photoNumber, photoInfo)
-        self.web_driver.jsonobj.append(photoInfo, hashtagGlobal, self.web_driver.jsonobj.hashtagData)
+        self.append(({"Profile": photoProfile,"Likes": photoLikes,"InfoInsta": photoInfoInsta,"Link": photoLink}), photoNumber, photoInfo)
+        self.append(photoInfo, hashtagGlobal, self.hashtagData)
         ##Write to the Json the information
-        self.web_driver.jsonobj.writeInfo("photoInfo","w",self.web_driver.jsonobj.hashtagData)
+        self.writeInfo("photoInfo","w",self.hashtagData)
 
         return 0 
 
