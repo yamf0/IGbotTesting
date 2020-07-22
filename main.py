@@ -1,7 +1,7 @@
 import argparse
 from time import sleep
 from igStart import igStart
-from igProfile import Profile
+from igProfile import igProfile
 from igInteraction import igInteraction
 from igJSON import jsonConstructor
 import logging
@@ -32,21 +32,23 @@ def main():
         sleep(2)
         Bot = igStart(account,password, args)
     
-    Perfil = Profile(Bot)
-    Perfil.iterarFotos(Bot)
+    Perfil = igProfile(Bot)
+    Perfil.iterarPerfil(Bot)
     sleep(5)
+    
+    #TODO crear instancia de iginteraction y ver lo de los objetos internos y json objetos
+    """
     Iterar = igInteraction(Bot)
 
     for i in range (4):
         logger.info("Hashtag number: {} ".format(i))
         Iterar.iterateHastag(Bot.jsonobj.generateHashtag())
         Bot.jsonobj.writeInfo(Bot.fileNameRoot, "w", Bot.permaData)
-
     #TODO migrar a main
     if Bot.runDrive == True:
-        Bot.driveObj.uploadFile(Bot.fileNames)
+        Bot.driveObj.uploadFile(Bot.fileNames) """
 
-    #Ciere de instancia del web driver 
+    #Cierre de instancia del web driver 
     Bot.driver.quit()
 
 

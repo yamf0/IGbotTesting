@@ -4,7 +4,7 @@
     Purpose: Automation of interaction in Instagram from Mexican Sombrero & -less, Testing
     Copyright
 '''
-from driveFile import driveFile
+#from driveFile import driveFile
 
 import os
 import platform
@@ -22,7 +22,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 #Libraries used to avoid being banned
-from igAntiban import igAntiban
+#from igAntiban import igAntiban
 from igInteraction import igInteraction
 from igJSON import jsonConstructor
 #Library to print personalize message. Allows more control in message control 
@@ -50,11 +50,11 @@ class igStart():
 
         #Open chrome
         if(platform.system() == 'Windows'):
-            self.driver = webdriver.Chrome("./chrome/chromedriver.exe" )
+            self.driver = webdriver.Chrome("./chromedriver/chromedriver.exe" )
         elif(platform.system()== 'Linux'):
             self.driver = webdriver.Chrome()
         else:
-            self.driver = webdriver.Chrome("./chrome/chromedriver")
+            self.driver = webdriver.Chrome("./chromedriver/chromedriver")
         logger.warning("This code was executed from {}".format(platform.system()))
 
         #Access information
@@ -63,14 +63,18 @@ class igStart():
         self.username = WebDriverWait(self.driver,10).until(EC.presence_of_element_located((By.NAME, 'username'))).send_keys(username)
         self.password = WebDriverWait(self.driver,10).until(EC.presence_of_element_located((By.NAME, 'password'))).send_keys(password + Keys.ENTER)
         logger.info("Access Granted")
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//img[contains(@alt, 'Instagram')]"))).click()
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[4]//button[2][@tabindex=\"0\"]"))).click()
-
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//img[contains(@alt, 'Instagram')]")))
+        # Nos podemos saltar las acciones primarias e irnos directo al perfil con el nuevo xpath 
+        """ .click()
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[4]//button[2][@tabindex=\"0\"]"))).click() """
+        
+        #TODO revisar la creacion de objetos del segundo TODO del bloque tanto para json como antiBan y primer TODO
+        """ 
         #TODO Checar instancia de creacion de archivos google drive 
-        """ if self.runDrive:
+        if self.runDrive:
             self.fileNames = [self.username + ".json", "likesProfiles.json"]
             exitCode = self.driveObj.downloadFile(self.fileNames)
-            if (exitCode == 0): exit() """
+            if (exitCode == 0): exit() 
 
         self.fileNameRoot = username 
         self.runDrive = args.drive
@@ -94,7 +98,7 @@ class igStart():
         #TODO meter un argumento en ARGPARSE para saber si vamos a correr lo de meterse a una cuenta de una foto con muchos likes
         ## esto nos quita tiempo si lo que se quiere es solo probar // parte del codigo de abajo se tendria que mover a un if##
         ##List of current run Likes of photos##
-        self.likes = np.random.randint(280, size=300)  
+        self.likes = np.random.randint(280, size=300) """  
         
     def exceptionHandler (self, xpath, trys= None):
         """

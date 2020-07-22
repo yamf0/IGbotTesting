@@ -4,12 +4,12 @@
     Purpose: Automation of interaction in Instagram from Mexican Sombrero & -less, Testing
     Copyright
 '''
-from igStart import igStart
+#from igStart import igStart
 from igFollowers import igFollowers
 from logging import StreamHandler
 from igJSON import jsonConstructor
 from igAntiban import igAntiban
-from driveFile import driveFile
+#from driveFile import driveFile
 from igProfile import igProfile
 
 import os
@@ -50,6 +50,7 @@ class igInteraction():
     def __init__(self, obj):
         super().__init__()
         self.web_driver = obj
+        
 
     def enterHashtag(self, hashtagGlobal):
         """
@@ -72,7 +73,7 @@ class igInteraction():
             Variables:
                 ->hashtagGlobal: hashtag used in iteration
         """
-        #Esto ya no existe, hay que cambiarlo a lo que sea que era 
+
         self.web_driver.hashtagData.update({hashtagGlobal:{}})
         self.comCount = 10
         self.maxComm = self.comCount
@@ -211,7 +212,7 @@ class igInteraction():
         """
             Will see if the chosen photo has already a like 
         """
-        i=0;
+        i=0
         while (True):
             try:
                 fill = self.web_driver.find_element_by_xpath("//*[local-name()='span' and @class='fr66n']/*[local-name()='button']/*[local-name()='svg']").get_attribute("fill")

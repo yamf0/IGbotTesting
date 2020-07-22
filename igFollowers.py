@@ -1,4 +1,4 @@
-from InstagramAPI import InstagramAPI
+#from InstagramAPI import InstagramAPI
 import pandas as pd
 from time import sleep
 import json

@@ -4,7 +4,7 @@
     Purpose: Automation of interaction in Instagram from Mexican Sombrero & -less, Testing
     Copyright
 '''
-from igStart import igStart
+#from igStart import igStart
 
 import os
 #Library to control the timings of execution
@@ -17,14 +17,14 @@ from selenium.common.exceptions import NoSuchElementException
 #Libraries used to avoid being banned
 import random
 
-
-class igAntiban(igStart):
+#TODO Quitar herencia de igStart y utilizar la instancia del bot en las funciones
+class igAntiban():
     """
         Class that avoids banning
     """
     def __init__(self, obj):
         self.obj = obj
-        self.web_driver = obj.web_driver
+        self.web_driver = obj.driver
         
 
 

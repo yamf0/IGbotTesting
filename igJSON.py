@@ -4,7 +4,7 @@
     Purpose: Automation of interaction in Instagram from Mexican Sombrero & -less, Testing
     Copyright
 '''
-from igStart import igStart
+#from igStart import igStart
 from igAntiban import igAntiban
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -18,7 +18,7 @@ import json
 import os
 import random
 
-
+# TODO Pasar todo esto a un archivo independiente para lectura
 #Lists of hashstags & comments.
 poss = ["#stayandwander", "#europe_perfection","#landscape", "#travel", "#travelphotography", "#travelling","#wanderlust",\
 "#wanderlusting", "#wanderluster", "#europetravel","#sunset","#traveltheworld", "#travellingthroughtheworld"]
