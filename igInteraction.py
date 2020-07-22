@@ -49,8 +49,7 @@ class igInteraction():
     """
     def __init__(self, obj):
         super().__init__()
-        self.web_driver = obj
-        
+        self.web_driver = obj.driver
 
     def enterHashtag(self, hashtagGlobal):
         """
@@ -143,26 +142,8 @@ class igInteraction():
                 print (choice[0])
                 print(self.comCount)
 
-                
-                ##<<<<<<<<TODO MANDAR Todo esto a una funcion (se encarga de checar si la foto es muy gustada o no)
-                ##check if Photo is liked##
-                photoLikes = self.web_driver.jsonobj.getAttributes("//div//button[@class = 'sqdOP yWX7d     _8A5w5    ']/span","text")
-                
-                sleep(2)
-
-                if(photoLikes):
-                    if("," in photoLikes):  photoLikes = photoLikes.replace(",","")
-                    photoLikes = int(photoLikes) 
-                    self.likes = np.append(self.likes, photoLikes)
-                else:
-                    photoLikes = 0
-                mu, std = norm.fit(self.likes)
-                
-                ##check for 2 z deviations from center##
-                cool = mu + 2 * std
-                print("Photos with more than {} Likes are cool".format(cool))
-                
-                ### END TODO>>>>>
+                ##Check the number of likes the photo has and if it is a cool photo or not
+                photoLikes, cool = self.coolPhoto()
                
                 if (choice[0]):
 
@@ -193,7 +174,7 @@ class igInteraction():
                         self.web_driver.find_element_by_xpath("//div[ contains(@class, 'Igw0E ')]/button[@class = 'wpO6b ']").click()
                         return                
                     #cool <= photoLikes and self.prof >= 0
-                    if (cool <= photoLikes and self.prof >= 0): 
+                    if (cool <= photoLikes and self.prof >= 0 and self.likedPhotos): 
                         self.prof -= 1
                         self.web_driver.antiBan.enterProfile(hashtagGlobal)
                         continue
@@ -273,6 +254,31 @@ class igInteraction():
         self.web_driver.jsonobj.writeInfo("photoInfo","w",self.web_driver.jsonobj.hashtagData)
 
         return 0 
+
+    def coolPhoto (self):
+        """
+            Check if the photo is really liked or not
+        """
+        ##<<<<<<<<TODO MANDAR Todo esto a una funcion (se encarga de checar si la foto es muy gustada o no)
+        ##check if Photo is liked##
+        photoLikes = self.getAttributes("//div//button[@class = 'sqdOP yWX7d     _8A5w5    ']/span","text")
+        
+        sleep(2)
+
+        if(photoLikes):
+            if("," in photoLikes):  photoLikes = photoLikes.replace(",","")
+            photoLikes = int(photoLikes) 
+            self.likes = np.append(self.likes, photoLikes)
+        else:
+            photoLikes = 0
+        mu, std = norm.fit(self.likes)
+        
+        ##check for 2 z deviations from center##
+        cool = mu + 2 * std
+        print("Photos with more than {} Likes are cool".format(cool))
+        
+        return photoLikes, cool
+       
 
     def checkComment(self,realPath):
         #Opening photo again

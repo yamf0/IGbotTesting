@@ -84,7 +84,7 @@ class igStart():
 
         #TODO CREAR TODOS LOS OBJETOS DE LAS FUNCIONES QUE NECESITEMOS AQUI
         self.antiBan = igAntiban(self)
-        self.jsonobj = jsonConstructor(self)
+        self.jsonObj = jsonConstructor(self)
         ##JSON for current run##
         self.hashtagData = {}
         ##Permanent JSON for Data Science##
@@ -95,10 +95,7 @@ class igStart():
             self.permaData = {}
         self.photoData = {}
 
-        #TODO meter un argumento en ARGPARSE para saber si vamos a correr lo de meterse a una cuenta de una foto con muchos likes
-        ## esto nos quita tiempo si lo que se quiere es solo probar // parte del codigo de abajo se tendria que mover a un if##
-        ##List of current run Likes of photos##
-        self.likes = np.random.randint(280, size=300) """  
+        self.likes = np.random.randint(280, size=300)  
         
     def exceptionHandler (self, xpath, trys= None):
         """
