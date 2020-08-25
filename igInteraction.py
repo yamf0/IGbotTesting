@@ -152,10 +152,10 @@ class igInteraction(jsonConstructor):
         """
         self.antiBan.randomSleep()
         photosElements = self.web_driver.find_elements_by_xpath("//div[@class = 'eLAPa']")
-        print ("ELEMENTS: ", photosElements)
+        #print ("ELEMENTS: ", photosElements)
 
         
-        for j in range(0,10):
+        for j in range(0,14):
             
             #Generate the Comment for that point
             self.usedComment = self.generateComment()
@@ -188,7 +188,7 @@ class igInteraction(jsonConstructor):
             print(self.comCount)
 
             ##check if Photo is liked##
-            photoLikes = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text")
+            photoLikes = self.getAttributes("//div[@class = ' Nm9Fw']/button/span","text")
             
             sleep(2)
 
@@ -211,11 +211,15 @@ class igInteraction(jsonConstructor):
                 ##Get info Photos##
                 photoInfo = {}
 
-                photoNumber = self.maxComm - self.comCount 
-                photoProfile = self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
-                photoInfoInsta = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt")
-                photoLink = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
-
+                photoNumber = self.maxComm - self.comCount
+                #get profile "//div[contains(@class, 'o-MQd ')]" --> element that contains profile 
+                # and follow button and location
+                photoProfile = self.getAttributes("//div[contains(@class, 'o-MQd ')]//div[@class= 'e1e1d']//a","text")
+                #get info of photo from insta
+                photoInfoInsta = self.getAttributes("//div[contains(@class, 'eLAPa ')]//img","alt")
+                #Get link of photo
+                photoLink = self.getAttributes("//div[contains(@class, 'eLAPa ')]//img","srcset")
+                #Geto photo hashtags
                 photoHashtags = self.getListAttributes("//*[local-name()='a' and @class = ' xil3i']")
 
                 ##Get the last number photo in dictionary
