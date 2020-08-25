@@ -64,7 +64,8 @@ class igStart():
         sleep(1)
         self.web_driver.find_element_by_name("password").send_keys(self.pw)
         sleep (1)
-        self.web_driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button/div").click()
+        ##Click iniciar sesion 
+        self.web_driver.find_element_by_xpath("//button[contains(@class, 'sqdOP') and @type='submit']").click()
         sleep(3)
         #click accept
         try:
