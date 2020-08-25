@@ -69,7 +69,6 @@ class igStart():
         sleep(3)
         #click accept
         try:
-            print("HHHHHHHHHH")
             self.exceptionHandler(' //div//button[contains(text( ), "no")]')
             sleep(2)
         except:

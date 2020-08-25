@@ -150,127 +150,125 @@ class igInteraction(jsonConstructor):
             Variables:
                 section: HTML div element
         """
-        if section == "top" :
-            pathInit = "/html/body/div[1]/section/main/article/div[1]/div/div/"    
-        else:
-            pathInit = "/html/body/div[1]/section/main/article/div[2]/div/"    
-        pathEnd = "/a/div/div[2]"
-        for i in range(1,4):
-            pathI = "div["+ str(i) + "]"
-            for j in range(1,4):
-                pathJ = "/div[" + str(j) + "]"
-                #Generate the Comment for that point
-                self.usedComment = self.generateComment()
-                #click the image
-                realPath=pathInit+pathI+pathJ+pathEnd
-                #HERE WE TRY THE EXCEPTION HANDLER
-                """errorCode = self.interactThread(self.exceptionHandler, path= realPath, trys= 3)
-                if errorCode == 1:
-                    continue"""
-                self.exceptionHandler(realPath, 3)
-                #self.exceptionHandler(realPath)
+        self.antiBan.randomSleep()
+        photosElements = self.web_driver.find_elements_by_xpath("//div[@class = 'eLAPa']")
+        print ("ELEMENTS: ", photosElements)
+
+        
+        for j in range(0,10):
+            
+            #Generate the Comment for that point
+            self.usedComment = self.generateComment()
+            
+            #HERE WE TRY THE EXCEPTION HANDLER
+            """errorCode = self.interactThread(self.exceptionHandler, path= realPath, trys= 3)
+            if errorCode == 1:
+                continue"""
+
+            self.exceptionHandler(photosElements[j], 3)
+            #self.exceptionHandler(realPath)
+            self.antiBan.randomSleep()
+            #Search previous Like
+            if (self.havingLike()):
+                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
                 self.antiBan.randomSleep()
-                #Search previous Like
-                if (self.havingLike()):
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
-                    self.antiBan.randomSleep()
-                    continue
+                continue
 
-                #Check if comments are disabled
-                if (self.hasXpath("/html/body/div[4]/div[2]/div/article/div[2]/div[3]/div")):
-                    #Close Photo
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
-                    print ("Comments on Photo are Disabled")
-                    self.antiBan.randomSleep()
-                    continue
+            #Check if comments are disabled
+            if (self.hasXpath("/html/body/div[4]/div[2]/div/article/div[2]/div[3]/div")):
+                #Close Photo
+                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                print ("Comments on Photo are Disabled")
+                self.antiBan.randomSleep()
+                continue
 
-                #Do the necessary math to see if making the comment
-                choice = random.choices([True,False],[((math.e)**((self.comCount/self.maxComm)-1)),((math.e)**(-self.comCount/self.maxComm))],k=1)
-                print (choice[0])
-                print(self.comCount)
+            #Do the necessary math to see if making the comment
+            choice = random.choices([True,False],[((math.e)**((self.comCount/self.maxComm)-1)),((math.e)**(-self.comCount/self.maxComm))],k=1)
+            print (choice[0])
+            print(self.comCount)
 
-                ##check if Photo is liked##
-                photoLikes = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text")
+            ##check if Photo is liked##
+            photoLikes = self.getAttributes("/html/body/div[4]/div[2]/div/article/div[2]/section[2]/div/div/button/span","text")
+            
+            sleep(2)
+
+            if(photoLikes):
+                if("," in photoLikes):  photoLikes = photoLikes.replace(",","")
+                photoLikes = int(photoLikes) 
+                self.likes = np.append(self.likes, photoLikes)
+            else:
+                photoLikes = 0
+            mu, std = norm.fit(self.likes)
+            
+            ##check for 2 z deviations from center##
+            cool = mu + 2 * std
+            print("Photos with more than {} Likes are cool".format(cool))
+            
+            
+            if (choice[0]):
+
                 
-                sleep(2)
+                ##Get info Photos##
+                photoInfo = {}
 
-                if(photoLikes):
-                    if("," in photoLikes):  photoLikes = photoLikes.replace(",","")
-                    photoLikes = int(photoLikes) 
-                    self.likes = np.append(self.likes, photoLikes)
+                photoNumber = self.maxComm - self.comCount 
+                photoProfile = self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
+                photoInfoInsta = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt")
+                photoLink = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
+
+                photoHashtags = self.getListAttributes("//*[local-name()='a' and @class = ' xil3i']")
+
+                ##Get the last number photo in dictionary
+                if(self.timeOfRun in self.permaData.keys()):
+                    lastNumber = list(self.permaData[self.timeOfRun].keys())[-1] + 1
                 else:
-                    photoLikes = 0
-                mu, std = norm.fit(self.likes)
+                    lastNumber = 0
                 
-                ##check for 2 z deviations from center##
-                cool = mu + 2 * std
-                print("Photos with more than {} Likes are cool".format(cool))
-                
-               
-                if (choice[0]):
+                ##Put info into Server JSON##
+                photoData = {"Profile": photoProfile,"Likes": photoLikes,"hashtag": photoHashtags}
+                self.append(photoData, (lastNumber) , self.photoData)
+                self.append(self.photoData, self.timeOfRun, self.permaData)
 
-                    
-                    ##Get info Photos##
-                    photoInfo = {}
+                ##Put info into Local JSON##
+                self.append(({"Profile": photoProfile,"Likes": photoLikes,"InfoInsta": photoInfoInsta,"Link": photoLink}), photoNumber, photoInfo)
+                self.append(photoInfo,hashtagGlobal, self.hashtagData)
+                self.writeInfo("photoInfo","w",self.hashtagData)
 
-                    photoNumber = self.maxComm - self.comCount 
-                    photoProfile = self.getAttributes("/html/body/div[4]/div[2]/div/article/header/div[2]/div[1]/div[1]/a","text")
-                    photoInfoInsta = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='div' and @class='KL4Bh']/*[local-name()='img']","alt")
-                    photoLink = self.getAttributes("//*[local-name()='div']/*[local-name()='article']//*[local-name()='img']","src")
-
-                    photoHashtags = self.getListAttributes("//*[local-name()='a' and @class = ' xil3i']")
-
-                    ##Get the last number photo in dictionary
-                    if(self.timeOfRun in self.permaData.keys()):
-                        lastNumber = list(self.permaData[self.timeOfRun].keys())[-1] + 1
-                    else:
-                        lastNumber = 0
-                    
-                    ##Put info into Server JSON##
-                    photoData = {"Profile": photoProfile,"Likes": photoLikes,"hashtag": photoHashtags}
-                    self.append(photoData, (lastNumber) , self.photoData)
-                    self.append(self.photoData, self.timeOfRun, self.permaData)
-
-                    ##Put info into Local JSON##
-                    self.append(({"Profile": photoProfile,"Likes": photoLikes,"InfoInsta": photoInfoInsta,"Link": photoLink}), photoNumber, photoInfo)
-                    self.append(photoInfo,hashtagGlobal, self.hashtagData)
-                    self.writeInfo("photoInfo","w",self.hashtagData)
-
-                    self.comCount = self.comCount - 1
-                    #Click Like
-                    self.exceptionHandler("(//div[@class='eo2As ']//button[@class='wpO6b '])[1]")
-                    self.antiBan.randomSleep()
-                    ##Click comment
-                    self.web_driver.find_element_by_xpath("(//div[@class='eo2As ']//button[@class='wpO6b '])[2]").click()
-                    self.web_driver.find_element_by_xpath("//textarea[contains(@class, 'Ypffh')]").send_keys(self.usedComment)
-                    self.web_driver.find_element_by_xpath("//textarea[contains(@class, 'Ypffh')]/following-sibling::button").click()
-                    self.antiBan.randomSleep()
-
-                    ##Will Photo be opened or not???##
-                
-                    
-                    ##close photo
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
-                    if not (self.checkComment(realPath)):
-                        self.antiBan.histories()
-                        return 
-                    if (self.comCount==0):
-                        self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
-                        return                
-                    #cool <= photoLikes and self.prof >= 0
-                    if (cool <= photoLikes and self.prof >= 0): 
-                        self.prof -= 1
-                        self.antiBan.enterProfile(hashtagGlobal)
-                        continue
-                        #self.exceptionHandler(realPath)
-                        #self.antiBan.randomSleep()
-                       
-                #This is the close button
-                self.exceptionHandler("/html/body/div[4]/div[3]/button", 5)
+                self.comCount = self.comCount - 1
+                #Click Like
+                self.exceptionHandler("(//div[@class='eo2As ']//button[@class='wpO6b '])[1]")
                 self.antiBan.randomSleep()
-        if (section == "recent"): return
-        #Re-run Hashtag for recent photos
-        self.iteratePhotos("recent",hashtagGlobal)
+                ##Click comment
+                self.web_driver.find_element_by_xpath("(//div[@class='eo2As ']//button[@class='wpO6b '])[2]").click()
+                self.web_driver.find_element_by_xpath("//textarea[contains(@class, 'Ypffh')]").send_keys(self.usedComment)
+                self.web_driver.find_element_by_xpath("//textarea[contains(@class, 'Ypffh')]/following-sibling::button").click()
+                self.antiBan.randomSleep()
+
+                ##Will Photo be opened or not???##
+            
+                
+                ##close photo
+                self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                if not (self.checkComment(photosElements[j])):
+                    self.antiBan.histories()
+                    return 
+                if (self.comCount==0):
+                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                    return                
+                #cool <= photoLikes and self.prof >= 0
+                if (cool <= photoLikes and self.prof >= 0): 
+                    self.prof -= 1
+                    self.antiBan.enterProfile(hashtagGlobal)
+                    continue
+                    #self.exceptionHandler(realPath)
+                    #self.antiBan.randomSleep()
+                    
+            #This is the close button
+            self.exceptionHandler("/html/body/div[4]/div[3]/button", 5)
+            self.antiBan.randomSleep()
+        
+
+        
 
     def generateHashtag(self):
         """
@@ -321,9 +319,9 @@ class igInteraction(jsonConstructor):
         except:
             return False
 
-    def checkComment(self,realPath):
+    def checkComment(self, element):
         #Opening photo again
-        self.web_driver.find_element_by_xpath(realPath).click()
+        element.click()
         self.antiBan.randomSleep()
         try:
             self.web_driver.find_element_by_xpath("//div/article//h3[//a[contains(text(),\"{}\")]]/following-sibling::span".format(self.username))
