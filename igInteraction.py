@@ -188,7 +188,7 @@ class igInteraction(jsonConstructor):
             print(self.comCount)
 
             ##check if Photo is liked##
-            photoLikes = self.getAttributes("//div[@class = ' Nm9Fw']/button/span","text")
+            photoLikes = self.getAttributes("//div[@class = 'Nm9Fw']/button/span","text")
             
             sleep(2)
 
@@ -207,36 +207,7 @@ class igInteraction(jsonConstructor):
             
             if (choice[0]):
 
-                
-                ##Get info Photos##
-                photoInfo = {}
-
-                photoNumber = self.maxComm - self.comCount
-                #get profile "//div[contains(@class, 'o-MQd ')]" --> element that contains profile 
-                # and follow button and location
-                photoProfile = self.getAttributes("//div[contains(@class, 'o-MQd ')]//div[@class= 'e1e1d']//a","text")
-                #get info of photo from insta
-                photoInfoInsta = self.getAttributes("//div[contains(@class, 'eLAPa ')]//img","alt")
-                #Get link of photo
-                photoLink = self.getAttributes("//div[contains(@class, 'eLAPa ')]//img","srcset")
-                #Geto photo hashtags
-                photoHashtags = self.getListAttributes("//*[local-name()='a' and @class = ' xil3i']")
-
-                ##Get the last number photo in dictionary
-                if(self.timeOfRun in self.permaData.keys()):
-                    lastNumber = list(self.permaData[self.timeOfRun].keys())[-1] + 1
-                else:
-                    lastNumber = 0
-                
-                ##Put info into Server JSON##
-                photoData = {"Profile": photoProfile,"Likes": photoLikes,"hashtag": photoHashtags}
-                self.append(photoData, (lastNumber) , self.photoData)
-                self.append(self.photoData, self.timeOfRun, self.permaData)
-
-                ##Put info into Local JSON##
-                self.append(({"Profile": photoProfile,"Likes": photoLikes,"InfoInsta": photoInfoInsta,"Link": photoLink}), photoNumber, photoInfo)
-                self.append(photoInfo,hashtagGlobal, self.hashtagData)
-                self.writeInfo("photoInfo","w",self.hashtagData)
+                self.getPhotoInfo(photoLikes, hashtagGlobal)
 
                 self.comCount = self.comCount - 1
                 #Click Like
@@ -271,7 +242,43 @@ class igInteraction(jsonConstructor):
             self.exceptionHandler("/html/body/div[4]/div[3]/button", 5)
             self.antiBan.randomSleep()
         
+    def getPhotoInfo(self, photoLikes, hashtagGlobal):
+        """
+            Will get the information of the current opened photo
+            
+            return -> 0 succesfull
+        """
 
+        ##Get info Photos##
+        photoInfo = {}
+
+        photoNumber = self.maxComm - self.comCount
+        #get profile "//div[contains(@class, 'o-MQd ')]" --> element that contains profile 
+        # and follow button and location
+        photoProfile = self.getAttributes("//div[contains(@class, 'o-MQd ')]//div[@class= 'e1e1d']//a","text")
+        #get info of photo from insta
+        photoInfoInsta = self.getAttributes("//div[contains(@class, 'eLAPa ')]//img","alt")
+        #Get link of photo
+        photoLink = self.getAttributes("//div[contains(@class, 'eLAPa ')]//img","srcset")
+        #Geto photo hashtags
+        photoHashtags = self.getListAttributes("//*[local-name()='a' and @class = ' xil3i']")
+
+        ##Get the last number photo in dictionary
+        if(self.timeOfRun in self.permaData.keys()):
+            lastNumber = list(self.permaData[self.timeOfRun].keys())[-1] + 1
+        else:
+            lastNumber = 0
+        
+        ##Put info into Server JSON##
+        photoData = {"Profile": photoProfile,"Likes": photoLikes,"hashtag": photoHashtags}
+        self.append(photoData, (lastNumber) , self.photoData)
+        self.append(self.photoData, self.timeOfRun, self.permaData)
+
+        ##Put info into Local JSON##
+        self.append(({"Profile": photoProfile,"Likes": photoLikes,"InfoInsta": photoInfoInsta,"Link": photoLink}), photoNumber, photoInfo)
+        self.append(photoInfo,hashtagGlobal, self.hashtagData)
+        self.writeInfo("photoInfo","w",self.hashtagData)
+        
         
 
     def generateHashtag(self):
