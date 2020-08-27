@@ -7,6 +7,7 @@
 from driveFile import driveFile
 
 import os
+import json
 import platform
 #Library to control the timings of execution
 from time import sleep
@@ -31,6 +32,10 @@ logger = logging.getLogger('igStart')
 #path to chrome driver##
 path_driver = os.path.dirname(os.path.realpath(__file__))
 print (path_driver)
+
+resourceFolder = os.path.join(os.getcwd(), "resources")
+with open (os.path.join(resourceFolder, "xpaths.json"), "r") as f:
+    xpaths = json.load(f)
 
 driverFiles = []
 class igStart():
@@ -65,15 +70,15 @@ class igStart():
         self.web_driver.find_element_by_name("password").send_keys(self.pw)
         sleep (1)
         ##Click iniciar sesion 
-        self.web_driver.find_element_by_xpath("//button[contains(@class, 'sqdOP') and @type='submit']").click()
+        self.web_driver.find_element_by_xpath(xpaths["log in"]).click()
         sleep(3)
         #click accept
         try:
-            self.exceptionHandler(' //div//button[contains(text( ), "no")]')
+            self.exceptionHandler(xpaths["button no"])
             sleep(2)
         except:
             pass
-        self.exceptionHandler("//div//button[contains(text( ), \"no\")]",3)
+        self.exceptionHandler(xpaths["button no"],3)
         sleep(3)
         self.timeOfRun = datetime.utcnow().strftime('%m/%d/%Y %H:%M:%S %Z') 
         logger.info("Access Granted")

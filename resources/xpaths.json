@@ -1,0 +1,21 @@
+{
+    "log in": "//button[contains(@class, 'sqdOP') and @type='submit']",
+
+    "button no": "//div//button[contains(text( ), 'no')]",
+
+    "# click": "//a[@class= 'yCE8d  '][1]",
+
+    "close photo": "/html/body/div[4]/div[3]/button",
+
+    "search #": "/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input",
+
+    "like button": "(//div[@class='eo2As ']//button[@class='wpO6b '])[1]",
+
+    "comment line": "(//div[@class='eo2As ']//button[@class='wpO6b '])[2]",
+
+    "comment": "//textarea[contains(@class, 'Ypffh')]",
+
+    "comment button" : "//textarea[contains(@class, 'Ypffh')]/following-sibling::button",
+    
+    "number likes": "//div[@class = 'Nm9Fw']/button/span"
+}
