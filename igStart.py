@@ -44,6 +44,21 @@ class igStart():
     """
     def __init__(self):
        pass
+    
+    def openChrome(self):
+        """
+            Will open webdrive instance and crhome driver
+        """
+         #Open chrome
+        if(platform.system() == 'Windows'):
+            self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
+        elif(platform.system()== 'Linux'):
+            self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver_daniel")
+        else:
+            self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver")
+        self.web_driver.get("https://instagram.com")
+        sleep(2)
+        return 0
 
     def openAccount(self):
         """
@@ -55,15 +70,6 @@ class igStart():
             exitCode = self.driveObj.downloadFile(self.fileNames)
             if (exitCode == 0): exit()
 
-        #Open chrome
-        if(platform.system() == 'Windows'):
-            self.web_driver = webdriver.Chrome(path_driver + "\chromedriver\chromedriver.exe" )
-        elif(platform.system()== 'Linux'):
-            self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver_daniel")
-        else:
-            self.web_driver = webdriver.Chrome(path_driver + "/chromedriver/chromedriver")
-        self.web_driver.get("https://instagram.com")
-        sleep(2)
         #Input account and pw
         self.web_driver.find_element_by_name("username").send_keys(self.username)
         sleep(1)

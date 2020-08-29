@@ -87,6 +87,7 @@ class igInteraction(jsonConstructor):
         if self.runDrive == True:
             self.driveObj = driveFile(self)
 
+        self.openChrome()
         self.openAccount()
 
         self.antiBan = igAntiban(self)
