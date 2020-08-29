@@ -70,7 +70,7 @@ class igStart():
         self.web_driver.find_element_by_name("password").send_keys(self.pw)
         sleep (1)
         ##Click iniciar sesion 
-        self.web_driver.find_element_by_xpath(xpaths["log in"]).click()
+        self.exceptionHandler(xpaths["log in"], trys= 3)
         sleep(3)
         #click accept
         try:
@@ -95,7 +95,7 @@ class igStart():
             try:
                 if(trys == 0 and not None): 
                     errorCode = 1
-                    break
+                    break 
                 ##Check if the Path passed is a webdriver object or a string Xpath object
                 if type(xpath) == str:
                     self.web_driver.find_element_by_xpath(xpath).click()
@@ -107,6 +107,6 @@ class igStart():
                 print("Exception: ")
                 print(ex)
                 if (trys): trys -= 1
-                sleep(3)
+                sleep(2)
                 continue 
         return errorCode       

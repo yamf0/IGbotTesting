@@ -175,14 +175,14 @@ class igInteraction(jsonConstructor):
             self.antiBan.randomSleep()
             #Search previous Like
             if (self.havingLike()):
-                self.web_driver.find_element_by_xpath(xpaths["close photo"]).click()
+                self.exceptionHandler(xpaths["close photo"], trys= 3)
                 self.antiBan.randomSleep()
                 continue
 
             #Check if comments are disabled
             if (self.hasXpath("/html/body/div[4]/div[2]/div/article/div[2]/div[3]/div")):
                 #Close Photo
-                self.web_driver.find_element_by_xpath(xpaths["close photo"]).click()
+                self.exceptionHandler(xpaths["close photo"], trys= 3)
                 print ("Comments on Photo are Disabled")
                 self.antiBan.randomSleep()
                 continue
@@ -216,24 +216,24 @@ class igInteraction(jsonConstructor):
 
                 self.comCount = self.comCount - 1
                 #Click Like
-                self.exceptionHandler(xpaths["like button"])
+                self.exceptionHandler(xpaths["like button"], trys= 3)
                 self.antiBan.randomSleep()
                 ##Click comment
-                self.web_driver.find_element_by_xpath(xpaths["comment line"]).click()
+                self.exceptionHandler(xpaths["comment line"], trys= 3)
                 self.web_driver.find_element_by_xpath(xpaths["comment"]).send_keys(self.usedComment)
-                self.web_driver.find_element_by_xpath(xpaths["comment button"]).click()
+                self.exceptionHandler(xpaths["comment button"], trys= 3)
                 self.antiBan.randomSleep()
 
                 ##Will Photo be opened or not???##
             
                 
                 ##close photo
-                self.web_driver.find_element_by_xpath(xpaths["close photo"]).click()
+                self.exceptionHandler(xpaths["close photo"], trys= 3)
                 if not (self.checkComment(photosElements[j])):
                     self.antiBan.histories()
                     return 
                 if (self.comCount==0):
-                    self.web_driver.find_element_by_xpath(xpaths["close photo"]).click()
+                    self.exceptionHandler(xpaths["close photo"], trys= 3)
                     return                
                 #cool <= photoLikes and self.prof >= 0
                 if (cool <= photoLikes and self.prof >= 0): 
@@ -319,7 +319,7 @@ class igInteraction(jsonConstructor):
                 self.antiBan.randomSleep()
                 i+= 1
                 if (i == 5) :
-                    self.web_driver.find_element_by_xpath("/html/body/div[4]/div[3]/button").click()
+                    self.exceptionHandler(xpaths["close photo"], trys= 3)
                 continue
 
         if fill == "#ed4956":
